@@ -11,7 +11,7 @@
  * 
  */
 int main(int argc, char** argv) {
-    2;
+    2 + 2;
     return (EXIT_SUCCESS);
 }
 
