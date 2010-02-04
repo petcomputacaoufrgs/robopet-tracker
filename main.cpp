@@ -5,7 +5,8 @@
 
 RoboCupSSLServer trackertoai(PORT_TRACKER_TO_AI, IP_TRACKER_TO_AI);
 RoboCupSSLClient simtotracker(PORT_SIM_TO_TRACKER, IP_SIM_TO_TRACKER),
-				 aitotracker(PORT_AI_TO_TRACKER, IP_AI_TO_TRACKER);
+				 aitotracker(PORT_AI_TO_TRACKER, IP_AI_TO_TRACKER),
+				 radiototracker(PORT_RADIO_TO_TRACKER, IP_RADIO_TO_TRACKER);
 
 int DEBUG = 1, USING_SSL = 0;
 
@@ -13,12 +14,14 @@ SimToTracker data;
 
 void receiveFromSim();
 void receiveFromAI();
+void receiveFromRadio();
 void receiveFromSSL();
 
 void receive()
 {
 	receiveFromSim();
 	receiveFromAI();
+	receiveFromRadio();
 	receiveFromSSL();
 }
 
@@ -42,6 +45,15 @@ void receiveFromAI()
 	}
 }
 
+void receiveFromRadio()
+{
+	SSL_WrapperPacket packet;
+	if (radiototracker.receive(packet) && packet.has_radiototracker()) {
+		printf("----------------------------");
+		printf("Received Radio-To-TRACKER!\n");
+	}
+}
+
 void receiveFromSSL()
 {
 	//TODO: Vision
@@ -49,7 +61,7 @@ void receiveFromSSL()
 
 void send()
 {
-	if(USING_SSL) {
+	if(!USING_SSL) {
 		 SSL_WrapperPacket packet;
 
 		 TrackerToAI *trackertoaiPacket = packet.mutable_trackertoai();
@@ -86,6 +98,7 @@ int main()
 
 	simtotracker.open(false);
 	aitotracker.open(false);
+	radiototracker.open(false);
 
 	printf("Press <Enter> to open connection with client...\n");
 	getchar();
