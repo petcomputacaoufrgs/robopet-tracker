@@ -71,13 +71,15 @@ void send()
 		 b->set_x(data.ball().x());
 		 b->set_y(data.ball().y());
 
+		printf("ball (%5i, %5i) --\n", data.ball().x(), data.ball().y());
+
 		for(int i = 0; i < data.robots_blue_size(); i++) {
 			RobotTracker *r = trackertoaiPacket->add_robots_blue();
 			r->set_x(data.robots_blue(i).x());
 			r->set_y(data.robots_blue(i).y());
 			r->set_theta(data.robots_blue(i).theta());
 
-			printf("cur_pos(%f, %f)\n", r->x(), r->y());
+			printf("cur_pos[%5i](%5i, %5i) --\n", i, r->x(), r->y());
 		}
 
 		for(int i = 0; i < data.robots_yellow_size(); i++) {
@@ -86,11 +88,12 @@ void send()
 			r->set_y(data.robots_yellow(i).y());
 			r->set_theta(data.robots_yellow(i).theta());
 
+			printf("cur_pos[%5i](%5i, %5i) --\n", i, r->x(), r->y());
 		}
 
 		 trackertoai.send(packet);
-		printf("Sent Tracker-To-AI\n");
-		printf("ball (%f, %f)\n", data.ball().x(), data.ball().y());
+		printf("Sent Tracker-To-AI --\n");
+
 		debug_int(data.robots_blue_size());
 		debug_int(data.robots_yellow_size());
 	} else {
@@ -117,3 +120,4 @@ int main()
 		send();
 	}
 }
+
