@@ -6,23 +6,25 @@
 RoboCupSSLServer trackertoai(PORT_TRACKER_TO_AI, IP_TRACKER_TO_AI);
 RoboCupSSLClient simtotracker(PORT_SIM_TO_TRACKER, IP_SIM_TO_TRACKER),
 				 aitotracker(PORT_AI_TO_TRACKER, IP_AI_TO_TRACKER),
-				 radiototracker(PORT_RADIO_TO_TRACKER, IP_RADIO_TO_TRACKER);
+				 radiototracker(PORT_RADIO_TO_TRACKER, IP_RADIO_TO_TRACKER),
+				 visiontotracker(PORT_VISION_TO_TRACKER, IP_VISION_TO_TRACKER);
 
-int DEBUG = 1, USING_SSL = 0;
+int DEBUG = 1, USING_VISION = 1;
 
-SimToTracker data;
+SimToTracker dataSim;
+String dataVision;
 
 void receiveFromSim();
 void receiveFromAI();
 void receiveFromRadio();
-void receiveFromSSL();
+void receiveFromVision();
 
 void receive()
 {
 	receiveFromSim();
 	receiveFromAI();
 	receiveFromRadio();
-	receiveFromSSL();
+	receiveFromVision();
 }
 
 void receiveFromSim()
@@ -32,7 +34,7 @@ void receiveFromSim()
 		//printf("----------------------------");
 		//printf("Received SIM-To-TRACKER!\n");
 
-		data = packet.simtotracker();
+		dataSim = packet.simtotracker();
 	}
 }
 
@@ -54,39 +56,47 @@ void receiveFromRadio()
 	}
 }
 
-void receiveFromSSL()
+void receiveFromVision()
 {
 	//TODO: Vision
+	String packet;
+	if(visiontotracker.receive(packet)) {
+		printf("----------------------------");
+		printf("Received Vision-To-TRACKER!\n");
+		printf("<|%s|>\n", packet.c_str());
+
+		dataVision = packet;
+	}
 }
 
 void send()
 {
-	if(!USING_SSL) {
+	if(!USING_VISION) {
 		 SSL_WrapperPacket packet;
 
 		 TrackerToAI *trackertoaiPacket = packet.mutable_trackertoai();
 		 BallTracker *b = trackertoaiPacket->mutable_ball();
 
 		//Identity Function Sim -> Tracker -> IA
-		 b->set_x(data.ball().x());
-		 b->set_y(data.ball().y());
+		 b->set_x(dataSim.ball().x());
+		 b->set_y(dataSim.ball().y());
 
-		printf("ball (%5i, %5i) --\n", data.ball().x(), data.ball().y());
+		printf("ball (%5i, %5i) --\n", dataSim.ball().x(), dataSim.ball().y());
 
-		for(int i = 0; i < data.robots_blue_size(); i++) {
+		for(int i = 0; i < dataSim.robots_blue_size(); i++) {
 			RobotTracker *r = trackertoaiPacket->add_robots_blue();
-			r->set_x(data.robots_blue(i).x());
-			r->set_y(data.robots_blue(i).y());
-			r->set_theta(data.robots_blue(i).theta());
+			r->set_x(dataSim.robots_blue(i).x());
+			r->set_y(dataSim.robots_blue(i).y());
+			r->set_theta(dataSim.robots_blue(i).theta());
 
 			printf("cur_pos[%5i](%5i, %5i) --\n", i, r->x(), r->y());
 		}
 
-		for(int i = 0; i < data.robots_yellow_size(); i++) {
+		for(int i = 0; i < dataSim.robots_yellow_size(); i++) {
 			RobotTracker *r = trackertoaiPacket->add_robots_yellow();
-			r->set_x(data.robots_yellow(i).x());
-			r->set_y(data.robots_yellow(i).y());
-			r->set_theta(data.robots_yellow(i).theta());
+			r->set_x(dataSim.robots_yellow(i).x());
+			r->set_y(dataSim.robots_yellow(i).y());
+			r->set_theta(dataSim.robots_yellow(i).theta());
 
 			printf("cur_pos[%5i](%5i, %5i) --\n", i, r->x(), r->y());
 		}
@@ -94,10 +104,14 @@ void send()
 		 trackertoai.send(packet);
 		printf("Sent Tracker-To-AI --\n");
 
-		debug_int(data.robots_blue_size());
-		debug_int(data.robots_yellow_size());
+		debug_int(dataSim.robots_blue_size());
+		debug_int(dataSim.robots_yellow_size());
 	} else {
 		//TODO: Vision
+        char *str = dataVision.c_str();
+
+        //é só copiar o código da IA antiga
+        //faço isso amanhã
 	}
 }
 
@@ -108,6 +122,7 @@ int main()
 	simtotracker.open(false);
 	aitotracker.open(false);
 	radiototracker.open(false);
+	visiontotracker.open(false);
 
 	printf("Press <Enter> to open connection with client...\n");
 	getchar();
