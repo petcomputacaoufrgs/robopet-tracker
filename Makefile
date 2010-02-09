@@ -33,4 +33,4 @@ all: tracker
 
 tracker: main.cpp $(AI_OBJECTS) $(PROTOBUF_O)
 	@echo $@
-	@$(CC) -o $@ $^ $(FLAGS)
+	@$(CC) -o $@ $^ $(FLAGS) `pkg-config --cflags --libs protobuf`
