@@ -2,6 +2,9 @@
 
 #include "ssl_client.h"
 #include "ssl_server.h"
+#include "vector.h"
+
+#define MAX_ROBOTS 5
 
 RoboCupSSLServer trackertoai(PORT_TRACKER_TO_AI, IP_TRACKER_TO_AI);
 RoboCupSSLClient simtotracker(PORT_SIM_TO_TRACKER, IP_SIM_TO_TRACKER),
@@ -16,7 +19,7 @@ String dataVision;
 
 int robot_total[TEAM_TOTAL] = {5, 5}; //FOR VISION COMMUNICATION
 
-//void robot
+Vector robot_last_position[TEAM_TOTAL][MAX_ROBOTS];
 
 void receiveFromSim();
 void receiveFromAI();
