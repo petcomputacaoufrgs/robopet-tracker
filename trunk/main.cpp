@@ -14,6 +14,10 @@ int DEBUG = 1, USING_VISION = 1;
 SimToTracker dataSim;
 String dataVision;
 
+int robot_total[TEAM_TOTAL] = {5, 5}; //FOR VISION COMMUNICATION
+
+//void robot
+
 void receiveFromSim();
 void receiveFromAI();
 void receiveFromRadio();
@@ -61,8 +65,8 @@ void receiveFromVision()
 	//TODO: Vision
 	String packet;
 	if(visiontotracker.receive(packet) && USING_VISION) {
-		printf("----------------------------");
-		printf("Received Vision-To-TRACKER!\n");
+		//printf("----------------------------");
+		//printf("Received Vision-To-TRACKER!\n");
 		//printf("<|%s|>\n", packet.c_str());
 
 		dataVision = packet;
@@ -81,7 +85,7 @@ void send()
 		 b->set_x(dataSim.ball().x());
 		 b->set_y(dataSim.ball().y());
 
-		printf("ball (%5i, %5i) --\n", dataSim.ball().x(), dataSim.ball().y());
+		printf("ball (%5i, %5i) --\n", b->x(), b->y());
 
 		for(int i = 0; i < dataSim.robots_blue_size(); i++) {
 			RobotTracker *r = trackertoaiPacket->add_robots_blue();
@@ -89,7 +93,7 @@ void send()
 			r->set_y(dataSim.robots_blue(i).y());
 			r->set_theta(dataSim.robots_blue(i).theta());
 
-			printf("cur_pos[%5i](%5i, %5i) --\n", i, r->x(), r->y());
+			printf("cur_pos[%2i][%5i](%5i, %5i) --\n", TEAM_BLUE, i, r->x(), r->y());
 		}
 
 		for(int i = 0; i < dataSim.robots_yellow_size(); i++) {
@@ -98,7 +102,7 @@ void send()
 			r->set_y(dataSim.robots_yellow(i).y());
 			r->set_theta(dataSim.robots_yellow(i).theta());
 
-			printf("cur_pos[%5i](%5i, %5i) --\n", i, r->x(), r->y());
+			printf("cur_pos[%2i][%5i](%5i, %5i) --\n", TEAM_YELLOW, i, r->x(), r->y());
 		}
 
 		 trackertoai.send(packet);
@@ -126,10 +130,65 @@ void send()
 		    }
         }
 
-	    for(int i = 0; i < k; i++) {
-	        printf("%5i: %5i --\n", i, posicoes[i]);
+	    for(int i = 0; i < k - 3; i += 3) {
+            ;//printf("jog[%2i](%5i, %5i, %5i) ", i, posicoes[i], posicoes[i + 1], posicoes[i + 2]);
 	    }
-	    printf("                       \n                              \n");
+	    //printf("ball(%5i, %5i)\n", posicoes[k - 2], posicoes[k - 1]);
+	    //printf("                       \n                              \n");
+
+
+		 SSL_WrapperPacket packet;
+
+		 TrackerToAI *trackertoaiPacket = packet.mutable_trackertoai();
+		 BallTracker *b = trackertoaiPacket->mutable_ball();
+
+		 b->set_x(posicoes[(robot_total[TEAM_BLUE] + robot_total[TEAM_YELLOW]) * 3]);
+		 b->set_y(posicoes[(robot_total[TEAM_BLUE] + robot_total[TEAM_YELLOW]) * 3 + 1]);
+
+        if(b->x() == -25 && b->y() == -6) {
+            b->set_x(0);
+            b->set_y(0);
+        }
+		printf("ball (%5i, %5i) --\n", b->x(), b->y());
+
+		for(int i = 0; i < robot_total[TEAM_BLUE]; i++) {
+		    if(posicoes[i * 3] == -25 &&
+		       posicoes[i * 3 + 1] == -6 &&
+		       posicoes[i * 3 + 2] == -1)
+		            continue;
+
+			RobotTracker *r = trackertoaiPacket->add_robots_blue();
+			r->set_x(posicoes[i * 3]);
+			r->set_y(posicoes[i * 3 + 1]);
+			r->set_theta(posicoes[i * 3 + 2]);
+
+			printf("cur_pos[%2i][%5i](%5i, %5i, %5i) --\n", TEAM_BLUE, i, r->x(), r->y(), r->theta());
+		}
+
+		for(int i = 0; i < robot_total[TEAM_YELLOW]; i++) {
+		    if(posicoes[i * 3 + robot_total[TEAM_BLUE] * 3] == -25 &&
+		       posicoes[i * 3 + 1 + robot_total[TEAM_BLUE] * 3] == -6 &&
+		       posicoes[i * 3 + 2 + robot_total[TEAM_BLUE] * 3] == 0)
+		            continue;
+
+			RobotTracker *r = trackertoaiPacket->add_robots_yellow();
+			r->set_x(posicoes[i * 3 + robot_total[TEAM_BLUE] * 3]);
+			r->set_y(posicoes[i * 3 + 1 + robot_total[TEAM_BLUE] * 3]);
+			r->set_theta(posicoes[i * 3 + 2 + robot_total[TEAM_BLUE] * 3]);
+
+			printf("cur_pos[%2i][%5i](%5i, %5i, %5i) --\n", TEAM_YELLOW, i, r->x(), r->y(), r->theta());
+		}
+
+		 trackertoai.send(packet);
+
+		for(int i = 1; i < 5; i++) {
+		    ;//printf("posicoes[%2i]: %5i\n", k - i, posicoes[k - i]);
+		}
+
+		printf("Sent Tracker-To-AI --\n");
+
+		debug_int(robot_total[TEAM_BLUE]);
+		debug_int(robot_total[TEAM_YELLOW]);
 	}
 
 }
