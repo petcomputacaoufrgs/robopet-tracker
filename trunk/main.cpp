@@ -95,8 +95,9 @@ void send()
 			r->set_x(dataSim.robots_blue(i).x());
 			r->set_y(dataSim.robots_blue(i).y());
 			r->set_theta(dataSim.robots_blue(i).theta());
+			r->set_id(i);
 
-			printf("cur_pos[%2i][%5i](%5i, %5i) --\n", TEAM_BLUE, i, r->x(), r->y());
+			printf("cur_pos[%2i][%5i](%5i, %5i) --\n", TEAM_BLUE, r->id(), r->x(), r->y());
 		}
 
 		for(int i = 0; i < dataSim.robots_yellow_size(); i++) {
@@ -104,8 +105,9 @@ void send()
 			r->set_x(dataSim.robots_yellow(i).x());
 			r->set_y(dataSim.robots_yellow(i).y());
 			r->set_theta(dataSim.robots_yellow(i).theta());
+			r->set_id(i);
 
-			printf("cur_pos[%2i][%5i](%5i, %5i) --\n", TEAM_YELLOW, i, r->x(), r->y());
+			printf("cur_pos[%2i][%5i](%5i, %5i) --\n", TEAM_YELLOW, r->id(), r->x(), r->y());
 		}
 
 		 trackertoai.send(packet);
@@ -164,8 +166,9 @@ void send()
 			r->set_x(posicoes[i * 3]);
 			r->set_y(posicoes[i * 3 + 1]);
 			r->set_theta(posicoes[i * 3 + 2]);
+			r->set_id(i);
 
-			printf("cur_pos[%2i][%5i](%5i, %5i, %5i) --\n", TEAM_BLUE, i, r->x(), r->y(), r->theta());
+			printf("cur_pos[%2i][%5i](%5i, %5i, %5i) --\n", TEAM_BLUE, r->id(), r->x(), r->y(), r->theta());
 		}
 
 		for(int i = 0; i < robot_total[TEAM_YELLOW]; i++) {
@@ -178,8 +181,9 @@ void send()
 			r->set_x(posicoes[i * 3 + robot_total[TEAM_BLUE] * 3]);
 			r->set_y(posicoes[i * 3 + 1 + robot_total[TEAM_BLUE] * 3]);
 			r->set_theta(posicoes[i * 3 + 2 + robot_total[TEAM_BLUE] * 3]);
+			r->set_id(i);
 
-			printf("cur_pos[%2i][%5i](%5i, %5i, %5i) --\n", TEAM_YELLOW, i, r->x(), r->y(), r->theta());
+			printf("cur_pos[%2i][%5i](%5i, %5i, %5i) --\n", TEAM_YELLOW, r->id(), r->x(), r->y(), r->theta());
 		}
 
 		 trackertoai.send(packet);
