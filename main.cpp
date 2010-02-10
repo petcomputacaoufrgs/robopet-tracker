@@ -60,10 +60,10 @@ void receiveFromVision()
 {
 	//TODO: Vision
 	String packet;
-	if(visiontotracker.receive(packet)) {
+	if(visiontotracker.receive(packet) && USING_VISION) {
 		printf("----------------------------");
 		printf("Received Vision-To-TRACKER!\n");
-		printf("<|%s|>\n", packet.c_str());
+		//printf("<|%s|>\n", packet.c_str());
 
 		dataVision = packet;
 	}
@@ -108,16 +108,40 @@ void send()
 		debug_int(dataSim.robots_yellow_size());
 	} else {
 		//TODO: Vision
-        char *str = dataVision.c_str();
+	    int tamanho = dataVision.size();
+	    int posicoes[50];
+	    string stringAux = "";
+	    int k = 0;
 
-        //é só copiar o código da IA antiga
-        //faço isso amanhã
+	    for (int i = 0; i < tamanho; i++)
+	    {
+		    if (dataVision[i] != '#')
+		    {
+			    stringAux += dataVision[i];
+		    }
+		    else
+		    {
+			    posicoes[k++] = atoi(stringAux.c_str());
+			    stringAux = "";
+		    }
+        }
+
+	    for(int i = 0; i < k; i++) {
+	        printf("%5i: %5i --\n", i, posicoes[i]);
+	    }
+	    printf("                       \n                              \n");
 	}
+
 }
 
-int main()
+int main(int argc, char **argv)
 {
 	printf("Tracker Running!\n");
+
+    if(argc > 1) {
+        USING_VISION = argv[1][0] == '1';
+        printf("USING_VISION set to %i\n", USING_VISION);
+    }
 
 	simtotracker.open(false);
 	aitotracker.open(false);
