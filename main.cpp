@@ -88,7 +88,7 @@ void send()
 		 b->set_x(dataSim.ball().x());
 		 b->set_y(dataSim.ball().y());
 
-		printf("ball (%5i, %5i) --\n", b->x(), b->y());
+		//printf("ball (%5i, %5i) --\n", b->x(), b->y());
 
 		for(int i = 0; i < dataSim.robots_blue_size(); i++) {
 			RobotTracker *r = trackertoaiPacket->add_robots_blue();
@@ -97,7 +97,7 @@ void send()
 			r->set_theta(dataSim.robots_blue(i).theta());
 			r->set_id(i);
 
-			printf("cur_pos[%2i][%5i](%5i, %5i) --\n", TEAM_BLUE, r->id(), r->x(), r->y());
+			//printf("cur_pos[%2i][%5i](%5i, %5i) --\n", TEAM_BLUE, r->id(), r->x(), r->y());
 		}
 
 		for(int i = 0; i < dataSim.robots_yellow_size(); i++) {
@@ -107,11 +107,11 @@ void send()
 			r->set_theta(dataSim.robots_yellow(i).theta());
 			r->set_id(i);
 
-			printf("cur_pos[%2i][%5i](%5i, %5i) --\n", TEAM_YELLOW, r->id(), r->x(), r->y());
+			//printf("cur_pos[%2i][%5i](%5i, %5i) --\n", TEAM_YELLOW, r->id(), r->x(), r->y());
 		}
 
 		 trackertoai.send(packet);
-		printf("Sent Tracker-To-AI --\n");
+		//printf("Sent Tracker-To-AI --\n");
 
 		debug_int(dataSim.robots_blue_size());
 		debug_int(dataSim.robots_yellow_size());
@@ -153,8 +153,11 @@ void send()
         if(b->x() == -25 && b->y() == -6) {
             b->set_x(0);
             b->set_y(0);
+            printf("x");
+        } else {
+            printf(".");
         }
-		printf("ball (%5i, %5i) --\n", b->x(), b->y());
+		//printf("ball (%5i, %5i) --\n", b->x(), b->y());
 
 		for(int i = 0; i < robot_total[TEAM_BLUE]; i++) {
 		    if(posicoes[i * 3] == -25 &&
@@ -168,7 +171,7 @@ void send()
 			r->set_theta(posicoes[i * 3 + 2]);
 			r->set_id(i);
 
-			printf("cur_pos[%2i][%5i](%5i, %5i, %5i) --\n", TEAM_BLUE, r->id(), r->x(), r->y(), r->theta());
+			//printf("cur_pos[%2i][%5i](%5i, %5i, %5i) --\n", TEAM_BLUE, r->id(), r->x(), r->y(), r->theta());
 		}
 
 		for(int i = 0; i < robot_total[TEAM_YELLOW]; i++) {
@@ -183,7 +186,7 @@ void send()
 			r->set_theta(posicoes[i * 3 + 2 + robot_total[TEAM_BLUE] * 3]);
 			r->set_id(i);
 
-			printf("cur_pos[%2i][%5i](%5i, %5i, %5i) --\n", TEAM_YELLOW, r->id(), r->x(), r->y(), r->theta());
+			//printf("cur_pos[%2i][%5i](%5i, %5i, %5i) --\n", TEAM_YELLOW, r->id(), r->x(), r->y(), r->theta());
 		}
 
 		 trackertoai.send(packet);
@@ -192,7 +195,7 @@ void send()
 		    ;//printf("posicoes[%2i]: %5i\n", k - i, posicoes[k - i]);
 		}
 
-		printf("Sent Tracker-To-AI --\n");
+		//printf("Sent Tracker-To-AI --\n");
 
 		debug_int(robot_total[TEAM_BLUE]);
 		debug_int(robot_total[TEAM_YELLOW]);
@@ -218,15 +221,15 @@ int main(int argc, char **argv)
 	getchar();
 	trackertoai.open();
 
-	clrscr();
-	int scrCount = 0;
+	//clrscr();
+	//int scrCount = 0;
 	while(1) {
-	    scrCount++;
-	    if(scrCount == SCR_CLEAR_DELAY) {
-	        scrCount = 0;
-	        clrscr();
-	    }
-		rewindscr();
+	    //scrCount++;
+	    //if(scrCount == SCR_CLEAR_DELAY) {
+	    //    scrCount = 0;
+	    //    clrscr();
+	    //}
+		//rewindscr();
 		receive();
 		send();
 	}
