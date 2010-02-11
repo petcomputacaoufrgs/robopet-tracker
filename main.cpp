@@ -12,7 +12,7 @@ RoboCupSSLClient simtotracker(PORT_SIM_TO_TRACKER, IP_SIM_TO_TRACKER),
 				 radiototracker(PORT_RADIO_TO_TRACKER, IP_RADIO_TO_TRACKER),
 				 visiontotracker(PORT_VISION_TO_TRACKER, IP_VISION_TO_TRACKER);
 
-int DEBUG = 1, USING_VISION = 1;
+int DEBUG = 1, USING_VISION = 0;
 
 SimToTracker dataSim;
 String dataVision;
