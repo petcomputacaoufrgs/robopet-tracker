@@ -38,8 +38,8 @@ void receiveFromSim()
 {
 	SSL_WrapperPacket packet;
 	if (simtotracker.receive(packet) && packet.has_simtotracker()) {
-		//printf("----------------------------");
-		//printf("Received SIM-To-TRACKER!\n");
+		printf("----------------------------");
+		printf("Received SIM-To-TRACKER!\n");
 
 		dataSim = packet.simtotracker();
 	}
@@ -88,7 +88,7 @@ void send()
 		 b->set_x(dataSim.ball().x());
 		 b->set_y(dataSim.ball().y());
 
-		//printf("ball (%5i, %5i) --\n", b->x(), b->y());
+		printf("ball (%5i, %5i) --\n", b->x(), b->y());
 
 		for(int i = 0; i < dataSim.robots_blue_size(); i++) {
 			RobotTracker *r = trackertoaiPacket->add_robots_blue();
@@ -97,7 +97,7 @@ void send()
 			r->set_theta(dataSim.robots_blue(i).theta());
 			r->set_id(i);
 
-			//printf("cur_pos[%2i][%5i](%5i, %5i) --\n", TEAM_BLUE, r->id(), r->x(), r->y());
+			printf("cur_pos[%2i][%5i](%5i, %5i) --\n", TEAM_BLUE, r->id(), r->x(), r->y());
 		}
 
 		for(int i = 0; i < dataSim.robots_yellow_size(); i++) {
@@ -107,11 +107,11 @@ void send()
 			r->set_theta(dataSim.robots_yellow(i).theta());
 			r->set_id(i);
 
-			//printf("cur_pos[%2i][%5i](%5i, %5i) --\n", TEAM_YELLOW, r->id(), r->x(), r->y());
+			printf("cur_pos[%2i][%5i](%5i, %5i) --\n", TEAM_YELLOW, r->id(), r->x(), r->y());
 		}
 
-		 trackertoai.send(packet);
-		//printf("Sent Tracker-To-AI --\n");
+		trackertoai.send(packet);
+		printf("Sent Tracker-To-AI --\n");
 
 		debug_int(dataSim.robots_blue_size());
 		debug_int(dataSim.robots_yellow_size());
@@ -221,17 +221,16 @@ int main(int argc, char **argv)
 	getchar();
 	trackertoai.open();
 
-	//clrscr();
-	//int scrCount = 0;
+	clrscr();
+	int scrCount = 0;
 	while(1) {
-	    //scrCount++;
-	    //if(scrCount == SCR_CLEAR_DELAY) {
-	    //    scrCount = 0;
-	    //    clrscr();
-	    //}
-		//rewindscr();
+	    scrCount++;
+	    if(scrCount == SCR_CLEAR_DELAY) {
+	        scrCount = 0;
+	        clrscr();
+	    }
+		rewindscr();
 		receive();
 		send();
 	}
 }
-
