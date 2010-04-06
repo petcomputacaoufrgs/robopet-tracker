@@ -14,6 +14,6 @@ SOCKETS_PATH = $(COMMUNICATION_PATH)/socket
 
 all: tracker
 
-tracker: main.cpp $(ROBOPET_LIB) $(COMMUNICATION_LIB)
+tracker: main.cpp $(ROBOPET_LIB)  $(COMMUNICATION_LIB)
 	@echo $@
 	@$(CC) -o $@ $^ $(FLAGS) `pkg-config --cflags --libs protobuf`
