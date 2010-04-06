@@ -180,7 +180,7 @@ void send()
 		       posicoes[i * 3 + 2 + robot_total[TEAM_BLUE] * 3] == 0)
 		            continue;
 
-			TrackerToAI::Robot *r = trackertoaiPacket->add_robots_yellow();
+			RobotTracker *r = trackertoaiPacket->add_robots_yellow();
 			r->set_x(posicoes[i * 3 + robot_total[TEAM_BLUE] * 3]);
 			r->set_y(posicoes[i * 3 + 1 + robot_total[TEAM_BLUE] * 3]);
 			r->set_theta(posicoes[i * 3 + 2 + robot_total[TEAM_BLUE] * 3]);
