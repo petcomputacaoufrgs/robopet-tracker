@@ -41,4 +41,4 @@ $(VISION_SOCKETS_PATH)/robocup_ssl_client.o: $(VISION_SOCKETS_PATH)/robocup_ssl_
 
 ### PROTOBUF ###
 $(VISION_PROTO_PATH)/%.pb.o:
-	$(CC) $(INC_PATHS) -c $(VISION_PROTO_PATH)/$*.pb.cc $(CFLAGS) $(LFLAGS)
+	$(CC) $(INC_PATHS) -c -o $@ $(VISION_PROTO_PATH)/$*.pb.cc $(CFLAGS) $(LFLAGS)
