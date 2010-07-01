@@ -1,7 +1,7 @@
 #include "tracker.h"
 
 void Tracker::track() {
-	
+
 	for(unsigned int i = 0; i < dataVision.balls.size(); i++) {
 		printf("-Ball (%2d/%2d): CONF=%4.2f POS=<%9.2f,%9.2f> ", i+1, dataVision.balls.size(), dataVision.balls[i].confidence(),
 																				dataVision.balls[i].x(),dataVision.balls[i].y());
@@ -12,17 +12,69 @@ void Tracker::track() {
 		}
 		printf("RAW=<%8.2f,%8.2f>\n", dataVision.balls[i].pixel_x(), dataVision.balls[i].pixel_y());
 	}
-	
+
 	for(unsigned int i = 0; i < dataVision.blueRobots.size(); i++) {
 		printf("-Robot(B) (%2d/%2d): ",i+1, dataVision.blueRobots.size());
 		printRobotInfo(dataVision.blueRobots[i]);
 	}
-	
+
 	for(unsigned int i = 0; i < dataVision.yellowRobots.size(); i++) {
 		printf("-Robot(B) (%2d/%2d): ",i+1, dataVision.yellowRobots.size());
 		printRobotInfo(dataVision.yellowRobots[i]);
 	}
 }
+
+void Tracker::simpleTrack() {
+
+	int set_robots_blue[5]= {0,0,0,0,0};
+	int set_robots_yellow[5]= {0,0,0,0,0};
+	TrackerBall ball;
+	TrackerRobot bot_blue;
+	TrackerRobot bot_yellow;
+
+	//first ball
+	if(dataVision.balls.size()>=1){
+		ball.x = dataVision.balls[0].x();
+		ball.y = dataVision.balls[0].y();
+
+		setBall(ball);
+	}
+
+	//first robot blue ->robot.robot_id();
+	//		setBlues(vector<TrackerRobot> blues);
+	//		setBlue(TrackerRobot blue, int index);
+	for(int i = 0; i < dataVision.blueRobots.size(); i++) {
+		if(dataVision.blueRobots[i].has_robot_id()){
+			if(!set_robots_blue[dataVision.blueRobots[i].robot_id()]){
+				//typedef struct _robot_ {
+				//	double x,y,angle;
+				//} TrackerRobot;
+				bot_blue.x = dataVision.blueRobots[i].x();
+				bot_blue.y = dataVision.blueRobots[i].y();
+				bot_blue.angle = dataVision.blueRobots[i].orientation();
+
+				setBlue(bot_blue,dataVision.blueRobots[i].robot_id());
+				set_robots_blue[dataVision.blueRobots[i].robot_id()]=1;
+			}
+		}
+	}
+
+
+	for(int i = 0; i < dataVision.yellowRobots.size(); i++) {
+		if(dataVision.yellowRobots[i].has_robot_id()){
+			if(!set_robots_yellow[dataVision.yellowRobots[i].robot_id()]){
+				bot_yellow.x = dataVision.yellowRobots[i].x();
+				bot_yellow.y = dataVision.yellowRobots[i].y();
+				bot_yellow.angle = dataVision.yellowRobots[i].orientation();
+
+				setYellow(bot_yellow,dataVision.yellowRobots[i].robot_id());
+				set_robots_yellow[dataVision.yellowRobots[i].robot_id()]=1;
+			}
+		}
+	}
+
+}
+
 
 void Tracker::receive() {
 	receiveFromSim();
@@ -36,7 +88,7 @@ void Tracker::send() {
 }
 
 void Tracker::receiveFromVision() {
-	
+
 	int balls_n, robots_blue_n, robots_yellow_n;
 
 	SSL_WrapperPacket packet;
@@ -60,7 +112,7 @@ void Tracker::receiveFromVision() {
 		//Yellow robot info:
 		for (int i = 0; i < robots_yellow_n; i++)
 			dataVision.yellowRobots.push_back(detection.robots_yellow(i));
-			
+
 	}
 }
 
@@ -137,19 +189,19 @@ void Tracker::setYellow(TrackerRobot yellow, int index) {
 }
 
 Tracker::Tracker() {
-		
+
 	simtotracker = new RoboPETClient(PORT_SIM_TO_TRACKER, IP_SIM_TO_TRACKER);
 	simtotracker->open(false);
-	
+
 	aitotracker = new RoboPETClient(PORT_AI_TO_TRACKER, IP_AI_TO_TRACKER);
 	aitotracker->open(false);
 
 	radiototracker = new RoboPETClient(PORT_RADIO_TO_TRACKER, IP_RADIO_TO_TRACKER);
 	radiototracker->open(false);
-	
+
 	visiontotracker = new RoboCupSSLClient();
 	visiontotracker->open(false);
-	
+
 	printf("Press <Enter> to open connection with client...\n");
 	getchar();
 	trackertoai = new RoboPETServer(PORT_TRACKER_TO_AI, IP_TRACKER_TO_AI);
@@ -157,7 +209,7 @@ Tracker::Tracker() {
 }
 
 Tracker::~Tracker() {
-	
+
 	trackertoai->close(); 	  delete(trackertoai);
 	simtotracker->close(); 	  delete(simtotracker);
 	aitotracker->close(); 	  delete(aitotracker);
