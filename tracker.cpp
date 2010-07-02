@@ -2,9 +2,9 @@
 
 void Tracker::track() {
 
+/*
 	for(unsigned int i = 0; i < dataVision.balls.size(); i++) {
-		printf("-Ball (%2d/%2d): CONF=%4.2f POS=<%9.2f,%9.2f> ", i+1, dataVision.balls.size(), dataVision.balls[i].confidence(),
-																				dataVision.balls[i].x(),dataVision.balls[i].y());
+		printf("-Ball (%2d/%2d): CONF=%4.2f POS=<%9.2f,%9.2f> ", i+1, dataVision.balls.size(), dataVision.balls[i].confidence(), dataVision.balls[i].x(),dataVision.balls[i].y());
 		if (dataVision.balls[i].has_z()) {
 			printf("Z=%7.2f ", dataVision.balls[i].z());
 		} else {
@@ -12,7 +12,7 @@ void Tracker::track() {
 		}
 		printf("RAW=<%8.2f,%8.2f>\n", dataVision.balls[i].pixel_x(), dataVision.balls[i].pixel_y());
 	}
-
+//*/
 	for(unsigned int i = 0; i < dataVision.blueRobots.size(); i++) {
 		printf("-Robot(B) (%2d/%2d): ",i+1, dataVision.blueRobots.size());
 		printRobotInfo(dataVision.blueRobots[i]);
@@ -22,6 +22,7 @@ void Tracker::track() {
 		printf("-Robot(B) (%2d/%2d): ",i+1, dataVision.yellowRobots.size());
 		printRobotInfo(dataVision.yellowRobots[i]);
 	}
+	simpleTrack();
 }
 
 void Tracker::simpleTrack() {
@@ -59,7 +60,6 @@ void Tracker::simpleTrack() {
 		}
 	}
 
-
 	for(int i = 0; i < dataVision.yellowRobots.size(); i++) {
 		if(dataVision.yellowRobots[i].has_robot_id()){
 			if(!set_robots_yellow[dataVision.yellowRobots[i].robot_id()]){
@@ -72,7 +72,7 @@ void Tracker::simpleTrack() {
 			}
 		}
 	}
-
+	printSimpleTrack(_ball, _blues, _yellows);
 }
 
 
@@ -234,4 +234,26 @@ void printRobotInfo(const SSL_DetectionRobot & robot) {
         printf("ANGLE=N/A    ");
     }
     printf("RAW=<%8.2f,%8.2f>\n",robot.pixel_x(),robot.pixel_y());
+}
+
+void printSimpleTrack(TrackerBall _ball, vector<TrackerRobot> _blues, vector<TrackerRobot> _yellows){
+	//print ball
+	printf("Ball cordinates: <X = %f, Y = %f>", _ball.x,_ball.y);
+	printf("\n");
+
+	//print blues
+	int i = 0;
+	while(i < _blues.size()){
+		printf("Blue Robot %f coordinates: <X = %f, Y = %f>", _blues[i].x,_blues[i].y,_blues[i].angle);
+		printf("\n");
+		i++;
+	}
+
+	//print yellows
+	i = 0;
+	while(i < _yellows.size()){
+		printf("Yellow Robot %f coordinates: <X = %f, Y = %f>;", _yellows[i].x,_yellows[i].y,_yellows[i].angle);
+		printf("\n");
+		i++;
+	}
 }
