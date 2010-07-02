@@ -3,18 +3,19 @@
 int main(int argc, char **argv)
 {
 	printf("Tracker Running!\n");
-	
+
     if(argc > 1) {
         //USING_VISION = argv[1][0] == '1';
         //printf("USING_VISION set to %i\n", USING_VISION);
     }
 
 	Tracker tracker;
-	
+
 	while(1) {
-		
+
 		tracker.receive();
 		tracker.track();
+		//tracker.simpleTrack();
 		tracker.send();
 	}
 
@@ -77,7 +78,7 @@ void send()
 		debug_int(dataSim.yellow_robots_size());
 	} else {
 		//TODO: Vision
-		
+
 		int tamanho = dataVision.size();
 		int posicoes[50];
 		string stringAux = "";
@@ -120,7 +121,7 @@ void send()
         }
 		//printf("ball (%5i, %5i) --\n", b->x(), b->y());
 
-		
+
 
 		for(int i = 0; i < robot_total[TEAM_BLUE]; i++) {
 		    if(posicoes[i * 3] == -25 &&
@@ -177,4 +178,4 @@ if(scrCount == SCR_CLEAR_DELAY) {
 	clrscr();
 }
 rewindscr();
-*/ 
+*/

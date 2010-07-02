@@ -76,5 +76,6 @@ class Tracker {
 
 /**********************************************************************/
 void printRobotInfo(const SSL_DetectionRobot & robot);
+void printSimpleTrack(TrackerBall _ball, vector<TrackerRobot> _blues, vector<TrackerRobot> _yellows);
 
 #endif
