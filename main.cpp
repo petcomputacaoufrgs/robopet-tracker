@@ -3,19 +3,24 @@
 int main(int argc, char **argv)
 {
 	printf("Tracker Running!\n");
-
+	
+	bool sim = false;
+	
     if(argc > 1) {
-        //USING_VISION = argv[1][0] == '1';
-        //printf("USING_VISION set to %i\n", USING_VISION);
+		for(int i = 1; i < argc; i++) {
+			string param; 
+			param.assign(argv[i]);
+			if(param.compare("-sim") == 0) sim = true;
+			
+		}
     }
-
-	Tracker tracker;
+    
+    Tracker tracker(sim);
 
 	while(1) {
 
 		tracker.receive();
 		tracker.track();
-		//tracker.simpleTrack();
 		tracker.send();
 	}
 
