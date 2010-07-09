@@ -8,12 +8,15 @@
 #include <rp_server.h>
 #include "robocup_ssl_client.h"
 
+#define ERROR(MSG) printf("ERROR: Call of function %s in file %s, line %i resulted in an error! - %s\n", __FUNCTION__, __FILE__, __LINE__, MSG)
+
 typedef struct _ball_ {
 	double x,y;
 } TrackerBall;
 
 typedef struct _robot_ {
 	double x,y,angle;
+	int id;
 } TrackerRobot;
 
 typedef struct _visiontotracker_ {
@@ -39,14 +42,19 @@ class Tracker {
 		vector<TrackerRobot> _blues;
 		vector<TrackerRobot> _yellows;
 
+		bool usingSimulator;
 
 	public:
 
-		Tracker();
+		Tracker(bool sim = false);
 		~Tracker();
 
 		void track();
+		
+		void identityTrack();
 		void simpleTrack();
+		void kalmanFilter();
+		
 		void receive();
 		void send();
 
@@ -63,6 +71,10 @@ class Tracker {
 		void setYellows(vector<TrackerRobot> yellows);
 		void setBlue(TrackerRobot blue, int index);
 		void setYellow(TrackerRobot yellow, int index);
+		
+		void printMyInfo();
+		void printVisionInfo();
+		void printSimInfo();
 
 	private:
 
@@ -76,6 +88,5 @@ class Tracker {
 
 /**********************************************************************/
 void printRobotInfo(const SSL_DetectionRobot & robot);
-void printSimpleTrack(TrackerBall _ball, vector<TrackerRobot> _blues, vector<TrackerRobot> _yellows);
 
 #endif

@@ -8,7 +8,6 @@
 #include <google/protobuf/descriptor.h>
 #include <google/protobuf/reflection_ops.h>
 #include <google/protobuf/wire_format.h>
-// @@protoc_insertion_point(includes)
 
 namespace {
 
@@ -101,8 +100,7 @@ const int SSL_WrapperPacket::kDetectionFieldNumber;
 const int SSL_WrapperPacket::kGeometryFieldNumber;
 #endif  // !_MSC_VER
 
-SSL_WrapperPacket::SSL_WrapperPacket()
-  : ::google::protobuf::Message() {
+SSL_WrapperPacket::SSL_WrapperPacket() {
   SharedCtor();
 }
 
@@ -111,8 +109,7 @@ void SSL_WrapperPacket::InitAsDefaultInstance() {
   geometry_ = const_cast< ::SSL_GeometryData*>(&::SSL_GeometryData::default_instance());
 }
 
-SSL_WrapperPacket::SSL_WrapperPacket(const SSL_WrapperPacket& from)
-  : ::google::protobuf::Message() {
+SSL_WrapperPacket::SSL_WrapperPacket(const SSL_WrapperPacket& from) {
   SharedCtor();
   MergeFrom(from);
 }
@@ -135,11 +132,6 @@ void SSL_WrapperPacket::SharedDtor() {
   }
 }
 
-void SSL_WrapperPacket::SetCachedSize(int size) const {
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-}
 const ::google::protobuf::Descriptor* SSL_WrapperPacket::descriptor() {
   protobuf_AssignDescriptorsOnce();
   return SSL_WrapperPacket_descriptor_;
@@ -176,27 +168,25 @@ bool SSL_WrapperPacket::MergePartialFromCodedStream(
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
       // optional .SSL_DetectionFrame detection = 1;
       case 1: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) !=
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_detection()));
-        } else {
           goto handle_uninterpreted;
         }
+        DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+             input, mutable_detection()));
         if (input->ExpectTag(18)) goto parse_geometry;
         break;
       }
       
       // optional .SSL_GeometryData geometry = 2;
       case 2: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) !=
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_geometry:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_geometry()));
-        } else {
           goto handle_uninterpreted;
         }
+       parse_geometry:
+        DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+             input, mutable_geometry()));
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -219,15 +209,21 @@ bool SSL_WrapperPacket::MergePartialFromCodedStream(
 
 void SSL_WrapperPacket::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
+  ::google::protobuf::uint8* raw_buffer = output->GetDirectBufferForNBytesAndAdvance(_cached_size_);
+  if (raw_buffer != NULL) {
+    SSL_WrapperPacket::SerializeWithCachedSizesToArray(raw_buffer);
+    return;
+  }
+  
   // optional .SSL_DetectionFrame detection = 1;
   if (_has_bit(0)) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+    ::google::protobuf::internal::WireFormatLite::WriteMessageNoVirtual(
       1, this->detection(), output);
   }
   
   // optional .SSL_GeometryData geometry = 2;
   if (_has_bit(1)) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+    ::google::protobuf::internal::WireFormatLite::WriteMessageNoVirtual(
       2, this->geometry(), output);
   }
   
@@ -284,9 +280,7 @@ int SSL_WrapperPacket::ByteSize() const {
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         unknown_fields());
   }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
   return total_size;
 }
 
@@ -356,7 +350,3 @@ void SSL_WrapperPacket::Swap(SSL_WrapperPacket* other) {
   return metadata;
 }
 
-
-// @@protoc_insertion_point(namespace_scope)
-
-// @@protoc_insertion_point(global_scope)

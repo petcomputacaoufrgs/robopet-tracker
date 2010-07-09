@@ -8,7 +8,6 @@
 #include <google/protobuf/descriptor.h>
 #include <google/protobuf/reflection_ops.h>
 #include <google/protobuf/wire_format.h>
-// @@protoc_insertion_point(includes)
 
 namespace {
 
@@ -124,8 +123,7 @@ const int Log_Frame::kFrameFieldNumber;
 const int Log_Frame::kRefboxCmdFieldNumber;
 #endif  // !_MSC_VER
 
-Log_Frame::Log_Frame()
-  : ::google::protobuf::Message() {
+Log_Frame::Log_Frame() {
   SharedCtor();
 }
 
@@ -133,8 +131,7 @@ void Log_Frame::InitAsDefaultInstance() {
   frame_ = const_cast< ::SSL_DetectionFrame*>(&::SSL_DetectionFrame::default_instance());
 }
 
-Log_Frame::Log_Frame(const Log_Frame& from)
-  : ::google::protobuf::Message() {
+Log_Frame::Log_Frame(const Log_Frame& from) {
   SharedCtor();
   MergeFrom(from);
 }
@@ -159,11 +156,6 @@ void Log_Frame::SharedDtor() {
   }
 }
 
-void Log_Frame::SetCachedSize(int size) const {
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-}
 const ::google::protobuf::Descriptor* Log_Frame::descriptor() {
   protobuf_AssignDescriptorsOnce();
   return Log_Frame_descriptor_;
@@ -202,30 +194,28 @@ bool Log_Frame::MergePartialFromCodedStream(
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
       // required .SSL_DetectionFrame frame = 1;
       case 1: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) !=
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_frame()));
-        } else {
           goto handle_uninterpreted;
         }
+        DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+             input, mutable_frame()));
         if (input->ExpectTag(18)) goto parse_refbox_cmd;
         break;
       }
       
       // required string refbox_cmd = 2;
       case 2: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) !=
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_refbox_cmd:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_refbox_cmd()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->refbox_cmd().data(), this->refbox_cmd().length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
-        } else {
           goto handle_uninterpreted;
         }
+       parse_refbox_cmd:
+        DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+              input, this->mutable_refbox_cmd()));
+        ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+          this->refbox_cmd().data(), this->refbox_cmd().length(),
+          ::google::protobuf::internal::WireFormat::PARSE);
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -248,9 +238,15 @@ bool Log_Frame::MergePartialFromCodedStream(
 
 void Log_Frame::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
+  ::google::protobuf::uint8* raw_buffer = output->GetDirectBufferForNBytesAndAdvance(_cached_size_);
+  if (raw_buffer != NULL) {
+    Log_Frame::SerializeWithCachedSizesToArray(raw_buffer);
+    return;
+  }
+  
   // required .SSL_DetectionFrame frame = 1;
   if (_has_bit(0)) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+    ::google::protobuf::internal::WireFormatLite::WriteMessageNoVirtual(
       1, this->frame(), output);
   }
   
@@ -319,9 +315,7 @@ int Log_Frame::ByteSize() const {
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         unknown_fields());
   }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
   return total_size;
 }
 
@@ -396,16 +390,14 @@ void Log_Frame::Swap(Log_Frame* other) {
 const int Refbox_Log::kLogFieldNumber;
 #endif  // !_MSC_VER
 
-Refbox_Log::Refbox_Log()
-  : ::google::protobuf::Message() {
+Refbox_Log::Refbox_Log() {
   SharedCtor();
 }
 
 void Refbox_Log::InitAsDefaultInstance() {
 }
 
-Refbox_Log::Refbox_Log(const Refbox_Log& from)
-  : ::google::protobuf::Message() {
+Refbox_Log::Refbox_Log(const Refbox_Log& from) {
   SharedCtor();
   MergeFrom(from);
 }
@@ -424,11 +416,6 @@ void Refbox_Log::SharedDtor() {
   }
 }
 
-void Refbox_Log::SetCachedSize(int size) const {
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-}
 const ::google::protobuf::Descriptor* Refbox_Log::descriptor() {
   protobuf_AssignDescriptorsOnce();
   return Refbox_Log_descriptor_;
@@ -458,14 +445,13 @@ bool Refbox_Log::MergePartialFromCodedStream(
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
       // repeated .Log_Frame log = 1;
       case 1: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) !=
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_log:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-                input, add_log()));
-        } else {
           goto handle_uninterpreted;
         }
+       parse_log:
+        DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+              input, add_log()));
         if (input->ExpectTag(10)) goto parse_log;
         if (input->ExpectAtEnd()) return true;
         break;
@@ -489,9 +475,15 @@ bool Refbox_Log::MergePartialFromCodedStream(
 
 void Refbox_Log::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
+  ::google::protobuf::uint8* raw_buffer = output->GetDirectBufferForNBytesAndAdvance(_cached_size_);
+  if (raw_buffer != NULL) {
+    Refbox_Log::SerializeWithCachedSizesToArray(raw_buffer);
+    return;
+  }
+  
   // repeated .Log_Frame log = 1;
   for (int i = 0; i < this->log_size(); i++) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+    ::google::protobuf::internal::WireFormatLite::WriteMessageNoVirtual(
       1, this->log(i), output);
   }
   
@@ -533,9 +525,7 @@ int Refbox_Log::ByteSize() const {
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         unknown_fields());
   }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
   return total_size;
 }
 
@@ -594,7 +584,3 @@ void Refbox_Log::Swap(Refbox_Log* other) {
   return metadata;
 }
 
-
-// @@protoc_insertion_point(namespace_scope)
-
-// @@protoc_insertion_point(global_scope)
