@@ -10,6 +10,9 @@
 
 #define ERROR(MSG) printf("ERROR: Call of function %s in file %s, line %i resulted in an error! - %s\n", __FUNCTION__, __FILE__, __LINE__, MSG)
 
+#define LENGTH 6050
+#define HEIGHT 4050
+
 typedef struct _ball_ {
 	double x,y;
 } TrackerBall;
@@ -84,6 +87,8 @@ class Tracker {
 		void receiveFromSim();
 
 		void sendToAI();
+		
+		void convertCoordinates();
 };
 
 /**********************************************************************/

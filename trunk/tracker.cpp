@@ -95,6 +95,10 @@ void Tracker::receiveFromVision() {
 		balls_n = detection.balls_size();
 		robots_blue_n =  detection.robots_blue_size();
 		robots_yellow_n =  detection.robots_yellow_size();
+		
+		dataVision.balls.clear();
+		dataVision.blueRobots.clear();
+		dataVision.yellowRobots.clear();
 
 		//Ball info:
 		for (int i = 0; i < balls_n; i++)
@@ -108,6 +112,7 @@ void Tracker::receiveFromVision() {
 		for (int i = 0; i < robots_yellow_n; i++)
 			dataVision.yellowRobots.push_back(detection.robots_yellow(i));
 
+		convertCoordinates();
 	}
 }
 
@@ -181,7 +186,7 @@ void Tracker::sendToAI() {
 		r->set_theta(_blues[i].angle);
 		r->set_id(_blues[i].id);
 
-		printf("cur_pos[%5i](%5i, %5i, %5i) --\n", r->id(), r->x(), r->y(), r->theta());
+		printf("cur_pos[%5i](%5i, %5i, %5f) --\n", r->id(), r->x(), r->y(), r->theta());
 	}
 
 	for(int i = 0; i < _yellows.size(); i++) {
@@ -192,7 +197,7 @@ void Tracker::sendToAI() {
 		r->set_theta(_yellows[i].angle);
 		r->set_id(_blues[i].id);
 
-		printf("cur_pos[%5i](%5i, %5i, %5i) --\n", r->id(), r->x(), r->y(), r->theta());
+		printf("cur_pos[%5i](%5i, %5i, %5f) --\n", r->id(), r->x(), r->y(), r->theta());
 	}
 
 	 trackertoai->send(packet);
@@ -250,6 +255,24 @@ void Tracker::setYellow(TrackerRobot yellow, int index) {
 		_yellows[index] = yellow;
 	else
 		ERROR("Trying to access out of bound index!");
+}
+
+void Tracker::convertCoordinates() {
+	
+	for(int i = 0; i < dataVision.balls.size(); i++) {
+		dataVision.balls[i].set_x(dataVision.balls[i].x() + LENGTH/2. + 675);
+		dataVision.balls[i].set_y(dataVision.balls[i].y() + HEIGHT/2. + 675);
+	}
+	
+	for(int i = 0; i < dataVision.blueRobots.size(); i++) {
+		dataVision.blueRobots[i].set_x(dataVision.blueRobots[i].x() + LENGTH/2. + 675);
+		dataVision.blueRobots[i].set_y(dataVision.blueRobots[i].y() + HEIGHT/2. + 675);
+	}
+	
+	for(int i = 0; i < dataVision.yellowRobots.size(); i++) {
+		dataVision.yellowRobots[i].set_x(dataVision.yellowRobots[i].x() + LENGTH/2. + 675);
+		dataVision.yellowRobots[i].set_y(dataVision.yellowRobots[i].y() + HEIGHT/2. + 675);
+	}
 }
 
 Tracker::Tracker(bool sim) {
