@@ -186,7 +186,7 @@ void Tracker::sendToAI() {
 		r->set_theta(_blues[i].angle);
 		r->set_id(_blues[i].id);
 
-		printf("cur_pos[%5i](%5i, %5i, %5f) --\n", r->id(), r->x(), r->y(), r->theta());
+		printf("cur_pos[%5i](%5i, %5i, %5i) --\n", r->id(), r->x(), r->y(), r->theta());
 	}
 
 	for(int i = 0; i < _yellows.size(); i++) {
@@ -197,7 +197,7 @@ void Tracker::sendToAI() {
 		r->set_theta(_yellows[i].angle);
 		r->set_id(_blues[i].id);
 
-		printf("cur_pos[%5i](%5i, %5i, %5f) --\n", r->id(), r->x(), r->y(), r->theta());
+		printf("cur_pos[%5i](%5i, %5i, %5i) --\n", r->id(), r->x(), r->y(), r->theta());
 	}
 
 	 trackertoai->send(packet);
