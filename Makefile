@@ -27,7 +27,7 @@ OBJECTS = $(PROTOBUF_FILES_O) $(VISION_SOCKETS_PATH)/robocup_ssl_client.o
 
 SOCKETS_PATH = $(COMMUNICATION_PATH)/socket
 
-all: tracker $(OBJECTS)
+all: $(OBJECTS) tracker
 
 tracker: main.cpp tracker.o $(OBJECTS) $(ROBOPET_LIB) $(COMMUNICATION_LIB)
 	@echo $@
