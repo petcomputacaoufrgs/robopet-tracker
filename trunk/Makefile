@@ -12,12 +12,13 @@ COMMUNICATION_LIB = $(COMMUNICATION_PATH)/communication.a
 
 VISION_SOCKETS_PATH = ./socket
 VISION_PROTO_PATH = ./proto
-INC_PATHS = -I$(VISION_SOCKETS_PATH) -I$(VISION_PROTO_PATH) -I/usr/include/qt4 -I/usr/include/qt4/QtCore -I$(COMMUNICATION_PATH)/socket -I$(COMMUNICATION_PATH)/packets
+VISION_PACKETS_PATH = ./packets
+INC_PATHS = -I$(VISION_SOCKETS_PATH) -I$(VISION_PACKETS_PATH) -I/usr/include/qt4 -I/usr/include/qt4/QtCore -I$(COMMUNICATION_PATH)/socket -I$(COMMUNICATION_PATH)/packets
 
-PROTOBUF_FILES_H = $(VISION_PROTO_PATH)/messages_robocup_ssl_detection.pb.h \
-				$(VISION_PROTO_PATH)/messages_robocup_ssl_geometry.pb.h \
-				$(VISION_PROTO_PATH)/messages_robocup_ssl_refbox_log.pb.h \
-				$(VISION_PROTO_PATH)/messages_robocup_ssl_wrapper.pb.h
+PROTOBUF_FILES_H = $(VISION_PACKETS_PATH)/messages_robocup_ssl_detection.pb.h \
+				$(VISION_PACKETS_PATH)/messages_robocup_ssl_geometry.pb.h \
+				$(VISION_PACKETS_PATH)/messages_robocup_ssl_refbox_log.pb.h \
+				$(VISION_PACKETS_PATH)/messages_robocup_ssl_wrapper.pb.h
 
 PROTOBUF_FILES_O = $(PROTOBUF_FILES_H:.h=.o)
 PROTOBUF_FILES_CC = $(PROTOBUF_FILES_H:.h=.cc)
@@ -26,7 +27,7 @@ OBJECTS = $(PROTOBUF_FILES_O) $(VISION_SOCKETS_PATH)/robocup_ssl_client.o
 
 SOCKETS_PATH = $(COMMUNICATION_PATH)/socket
 
-all: tracker
+all: tracker $(OBJECTS)
 
 tracker: main.cpp tracker.o $(OBJECTS) $(ROBOPET_LIB) $(COMMUNICATION_LIB)
 	@echo $@
@@ -40,5 +41,6 @@ $(VISION_SOCKETS_PATH)/robocup_ssl_client.o: $(VISION_SOCKETS_PATH)/robocup_ssl_
 	$(CC) $(INC_PATHS) -c -o $@ $< $(CFLAGS) $(LFLAGS)
 
 ### PROTOBUF ###
-$(VISION_PROTO_PATH)/%.pb.o:
-	$(CC) $(INC_PATHS) -c -o $@ $(VISION_PROTO_PATH)/$*.pb.cc $(CFLAGS) $(LFLAGS)
+$(VISION_PACKETS_PATH)/%.pb.o: $(VISION_PROTO_PATH)/%.proto
+	protoc -I=$(VISION_PROTO_PATH) --cpp_out=$(VISION_PACKETS_PATH) $(VISION_PROTO_PATH)/$*.proto
+	$(CC) $(INC_PATHS) -c -o $@ $(VISION_PACKETS_PATH)/$*.pb.cc $(CFLAGS) $(LFLAGS)
