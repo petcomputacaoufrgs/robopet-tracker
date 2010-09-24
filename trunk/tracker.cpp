@@ -143,6 +143,7 @@ void Tracker::receiveFromSim()
 	if (simtotracker->receive(packet) && packet.has_simtotracker()) {
 		printf("----------------------------");
 		printf("Received SIM-To-TRACKER!\n");
+		system("clear");
 		dataSim = packet.simtotracker();
 		
 		_ball.x = dataSim.ball().x();
@@ -293,6 +294,8 @@ Tracker::Tracker(bool sim) {
 
 	printf("Press <Enter> to open connection with client...\n");
 	getchar();
+	printf("Ready to receive data.\n");
+	
 	trackertoai = new RoboPETServer(PORT_TRACKER_TO_AI, IP_TRACKER_TO_AI);
 	trackertoai->open();
 }

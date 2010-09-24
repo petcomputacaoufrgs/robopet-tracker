@@ -18,7 +18,7 @@ int main(int argc, char **argv)
     Tracker tracker(sim);
 
 	while(1) {
-
+	
 		tracker.receive();
 		tracker.track();
 		tracker.send();
