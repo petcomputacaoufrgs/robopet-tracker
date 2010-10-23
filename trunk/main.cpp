@@ -15,6 +15,11 @@ int main(int argc, char **argv)
 		}
     }
     
+    if(sim)
+		printf("Tracker will receive from SIM.\n");
+	else
+		printf("Tracker will receive from VISION.\n");
+    
     Tracker tracker(sim);
 
 	while(1) {
