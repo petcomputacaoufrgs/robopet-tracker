@@ -70,8 +70,8 @@ void Tracker::receive() {
 	_blues.clear();
 	_yellows.clear();
 	
-	receiveFromAI();
-	receiveFromRadio();
+	//receiveFromAI(); //not used yet
+	//receiveFromRadio(); //not used yet
 	if(usingSimulator)
 		receiveFromSim();
 	else
@@ -165,6 +165,8 @@ void Tracker::receiveFromSim()
 			_yellows.push_back(bot_yellow);
 		}
 	}
+	else
+		printf("Didn't receive SIM-To-TRACKER.\n"); 
 }
 
 void Tracker::sendToAI() {
@@ -280,7 +282,7 @@ Tracker::Tracker(bool sim) {
 	
 	usingSimulator = sim;
 
-	simtotracker = new RoboPETClient(PORT_SIM_TO_TRACKER, IP_SIM_TO_TRACKER);
+	simtotracker = new RoboPETClient(8100, IP_SIM_TO_TRACKER);
 	simtotracker->open(false);
 
 	aitotracker = new RoboPETClient(PORT_AI_TO_TRACKER, IP_AI_TO_TRACKER);
