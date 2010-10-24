@@ -263,18 +263,18 @@ void Tracker::setYellow(TrackerRobot yellow, int index) {
 void Tracker::convertCoordinates() {
 	
 	for(int i = 0; i < dataVision.balls.size(); i++) {
-		dataVision.balls[i].set_x(dataVision.balls[i].x() + LENGTH/2. + 675);
-		dataVision.balls[i].set_y(dataVision.balls[i].y() + HEIGHT/2. + 675);
+		dataVision.balls[i].set_x(dataVision.balls[i].x() + LENGTH/2.);
+		dataVision.balls[i].set_y(dataVision.balls[i].y() + HEIGHT/2.);
 	}
 	
 	for(int i = 0; i < dataVision.blueRobots.size(); i++) {
-		dataVision.blueRobots[i].set_x(dataVision.blueRobots[i].x() + LENGTH/2. + 675);
-		dataVision.blueRobots[i].set_y(dataVision.blueRobots[i].y() + HEIGHT/2. + 675);
+		dataVision.blueRobots[i].set_x(dataVision.blueRobots[i].x() + LENGTH/2.);
+		dataVision.blueRobots[i].set_y(dataVision.blueRobots[i].y() + HEIGHT/2.);
 	}
 	
 	for(int i = 0; i < dataVision.yellowRobots.size(); i++) {
-		dataVision.yellowRobots[i].set_x(dataVision.yellowRobots[i].x() + LENGTH/2. + 675);
-		dataVision.yellowRobots[i].set_y(dataVision.yellowRobots[i].y() + HEIGHT/2. + 675);
+		dataVision.yellowRobots[i].set_x(dataVision.yellowRobots[i].x() + LENGTH/2.);
+		dataVision.yellowRobots[i].set_y(dataVision.yellowRobots[i].y() + HEIGHT/2.);
 	}
 }
 
@@ -285,7 +285,7 @@ Tracker::Tracker(bool sim) {
 	simtotracker = new RoboPETClient(8100, IP_SIM_TO_TRACKER);
 	simtotracker->open(false);
 
-	aitotracker = new RoboPETClient(PORT_AI_TO_TRACKER, IP_AI_TO_TRACKER);
+	aitotracker = new RoboPETClient(PORT_AI_TO_TRACKER, "172.26.201.5");
 	aitotracker->open(false);
 
 	radiototracker = new RoboPETClient(PORT_RADIO_TO_TRACKER, IP_RADIO_TO_TRACKER);
