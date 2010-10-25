@@ -82,9 +82,9 @@ void Tracker::receive() {
 }
 
 void Tracker::send() {
-std::cout << "PORRA\n";
+
 	sendToAI();
-std::cout << "caralho\n";
+
 }
 
 void Tracker::receiveFromVision() {
@@ -192,7 +192,7 @@ void Tracker::sendToAI() {
 		r->set_x(_blues[i].x);
 		r->set_y(_blues[i].y);
 		r->set_theta(_blues[i].angle);
-		r->set_id(_blues[i].id+11);
+		r->set_id(_blues[i].id+10);
 
 		printf("cur_pos[%5i](%5i, %5i, %5i) --\n", r->id(), r->x(), r->y(), r->theta());
 	}
@@ -203,7 +203,7 @@ void Tracker::sendToAI() {
 		r->set_x(_yellows[i].x);
 		r->set_y(_yellows[i].y);
 		r->set_theta(_yellows[i].angle);
-		r->set_id(_yellows[i].id+11);
+		r->set_id(_yellows[i].id+10);
 
 		printf("cur_pos[%5i](%5i, %5i, %5i) --\n", r->id(), r->x(), r->y(), r->theta());
 	}
