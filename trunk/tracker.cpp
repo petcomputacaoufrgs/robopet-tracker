@@ -1,4 +1,5 @@
 #include "tracker.h"
+#include <iostream>
 
 void Tracker::track() {
 
@@ -37,6 +38,7 @@ void Tracker::identityTrack() {
 				bot_blue.angle = dataVision.blueRobots[i].orientation();
 				bot_blue.id = dataVision.blueRobots[i].robot_id();
 
+				//bot_blue.id == 0 ? _blues.insert(_blues.begin(), 1, bot_blue) : _blues.push_back(bot_blue);
 				_blues.push_back(bot_blue);
 				set_robots_blue[bot_blue.id]=1;
 			}
@@ -51,6 +53,7 @@ void Tracker::identityTrack() {
 				bot_yellow.angle = dataVision.yellowRobots[i].orientation();
 				bot_yellow.id = dataVision.yellowRobots[i].robot_id();
 
+				//bot_yellow.id == 0 ? _yellows.insert(_yellows.begin(), 1, bot_yellow) : _yellows.push_back(bot_yellow);
 				_yellows.push_back(bot_yellow);
 				set_robots_yellow[bot_yellow.id]=1;
 			}
@@ -79,7 +82,9 @@ void Tracker::receive() {
 }
 
 void Tracker::send() {
+std::cout << "PORRA\n";
 	sendToAI();
+std::cout << "caralho\n";
 }
 
 void Tracker::receiveFromVision() {
@@ -187,7 +192,7 @@ void Tracker::sendToAI() {
 		r->set_x(_blues[i].x);
 		r->set_y(_blues[i].y);
 		r->set_theta(_blues[i].angle);
-		r->set_id(_blues[i].id);
+		r->set_id(_blues[i].id+11);
 
 		printf("cur_pos[%5i](%5i, %5i, %5i) --\n", r->id(), r->x(), r->y(), r->theta());
 	}
@@ -198,7 +203,7 @@ void Tracker::sendToAI() {
 		r->set_x(_yellows[i].x);
 		r->set_y(_yellows[i].y);
 		r->set_theta(_yellows[i].angle);
-		r->set_id(_blues[i].id);
+		r->set_id(_yellows[i].id+11);
 
 		printf("cur_pos[%5i](%5i, %5i, %5i) --\n", r->id(), r->x(), r->y(), r->theta());
 	}
@@ -282,10 +287,10 @@ Tracker::Tracker(bool sim) {
 	
 	usingSimulator = sim;
 
-	simtotracker = new RoboPETClient(8100, IP_SIM_TO_TRACKER);
+	simtotracker = new RoboPETClient(PORT_SIM_TO_TRACKER, IP_SIM_TO_TRACKER);
 	simtotracker->open(false);
 
-	aitotracker = new RoboPETClient(PORT_AI_TO_TRACKER, "172.26.201.5");
+	aitotracker = new RoboPETClient(PORT_AI_TO_TRACKER, "localhost");
 	aitotracker->open(false);
 
 	radiototracker = new RoboPETClient(PORT_RADIO_TO_TRACKER, IP_RADIO_TO_TRACKER);
