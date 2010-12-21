@@ -105,17 +105,28 @@ void Tracker::receiveFromVision() {
 		dataVision.blueRobots.clear();
 		dataVision.yellowRobots.clear();
 
+/*		bot_blue.x = dataVision.blueRobots[i].x();
+		bot_blue.y = dataVision.blueRobots[i].y();
+		bot_blue.angle = dataVision.blueRobots[i].orientation();
+		bot_blue.id = dataVision.blueRobots[i].robot_id();*/
+		
 		//Ball info:
-		for (int i = 0; i < balls_n; i++)
+		for (int i = 0; i < balls_n; i++) {
+			printf("ball[%i] = %f,%f\n",i, detection.balls(i).x(), detection.balls(i).y());
 			dataVision.balls.push_back(detection.balls(i));
+		}
 
 		//Blue robot info:
-		for (int i = 0; i < robots_blue_n; i++)
+		for (int i = 0; i < robots_blue_n; i++) {
+			printf("robot[%i] = %f,%f\n",i, detection.robots_blue(i).x(), detection.robots_blue(i).y());
 			dataVision.blueRobots.push_back(detection.robots_blue(i));
+		}
 
 		//Yellow robot info:
-		for (int i = 0; i < robots_yellow_n; i++)
+		for (int i = 0; i < robots_yellow_n; i++) {
+			printf("robot[%i] = %f,%f\n",i, detection.robots_yellow(i).x(), detection.robots_yellow(i).y());
 			dataVision.yellowRobots.push_back(detection.robots_yellow(i));
+		}
 
 		convertCoordinates();
 	}
