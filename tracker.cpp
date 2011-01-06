@@ -27,12 +27,12 @@ void Tracker::identityTrack() {
 	//first robot blue ->robot.robot_id();
 	//		setBlues(vector<TrackerRobot> blues);
 	//		setBlue(TrackerRobot blue, int index);
+	
 	for(int i = 0; i < dataVision.blueRobots.size(); i++) {
-		if(dataVision.blueRobots[i].has_robot_id()){
-			if(!set_robots_blue[dataVision.blueRobots[i].robot_id()]){
-				//typedef struct _robot_ {
-				//	double x,y,angle;
-				//} TrackerRobot;
+		if(!dataVision.blueRobots[i].has_robot_id()){
+	//		if(!set_robots_blue[dataVision.blueRobots[i].robot_id()]){
+			if(!set_robots_blue[i]){
+				
 				bot_blue.x = dataVision.blueRobots[i].x();
 				bot_blue.y = dataVision.blueRobots[i].y();
 				bot_blue.angle = dataVision.blueRobots[i].orientation();
@@ -41,13 +41,16 @@ void Tracker::identityTrack() {
 				//bot_blue.id == 0 ? _blues.insert(_blues.begin(), 1, bot_blue) : _blues.push_back(bot_blue);
 				_blues.push_back(bot_blue);
 				set_robots_blue[bot_blue.id]=1;
+				
 			}
 		}
 	}
 
 	for(int i = 0; i < dataVision.yellowRobots.size(); i++) {
-		if(dataVision.yellowRobots[i].has_robot_id()){
-			if(!set_robots_yellow[dataVision.yellowRobots[i].robot_id()]){
+		if(!dataVision.yellowRobots[i].has_robot_id()){
+		//	if(!set_robots_yellow[dataVision.yellowRobots[i].robot_id()]){
+			if(!set_robots_yellow[i]){
+				
 				bot_yellow.x = dataVision.yellowRobots[i].x();
 				bot_yellow.y = dataVision.yellowRobots[i].y();
 				bot_yellow.angle = dataVision.yellowRobots[i].orientation();
@@ -127,6 +130,10 @@ void Tracker::receiveFromVision() {
 			printf("robot[%i] = %f,%f\n",i, detection.robots_yellow(i).x(), detection.robots_yellow(i).y());
 			dataVision.yellowRobots.push_back(detection.robots_yellow(i));
 		}
+		
+		printf("balls_n = %i\n", balls_n);
+		printf("robots_blue_n = %i\n", robots_blue_n);
+		printf("robots_yellow_n = %i\n", robots_yellow_n);
 
 		convertCoordinates();
 	}
@@ -171,6 +178,7 @@ void Tracker::receiveFromSim()
 			bot_blue.angle = dataSim.blue_robots(i).theta();
 			bot_blue.id = dataSim.blue_robots(i).id();
 			_blues.push_back(bot_blue);
+			
 		}
 
 		for(int i = 0; i < dataSim.yellow_robots_size(); i++) {
@@ -191,12 +199,13 @@ void Tracker::sendToAI() {
 	
 	TrackerToAI *trackertoaiPacket = packet.mutable_trackertoai();
 	TrackerToAI::Ball *b = trackertoaiPacket->mutable_ball();
-
+	printf("----------------------------\n");
+	printf("Send TRACKER-To-AI!\n");
 	b->set_x(_ball.x);
 	b->set_y(_ball.y);
 
 	//printf("ball (%5i, %5i) --\n", b->x(), b->y());
-
+	
 	for(int i = 0; i < _blues.size(); i++) {
 
 		TrackerToAI::Robot *r = trackertoaiPacket->add_blue_robots();
@@ -204,7 +213,7 @@ void Tracker::sendToAI() {
 		r->set_y(_blues[i].y);
 		r->set_theta(_blues[i].angle);
 		r->set_id(_blues[i].id+10);
-
+		
 		printf("cur_pos[%5i](%5i, %5i, %5i) --\n", r->id(), r->x(), r->y(), r->theta());
 	}
 
