@@ -29,9 +29,8 @@ void Tracker::identityTrack() {
 	//		setBlue(TrackerRobot blue, int index);
 	
 	for(int i = 0; i < dataVision.blueRobots.size(); i++) {
-		if(!dataVision.blueRobots[i].has_robot_id()){
-	//		if(!set_robots_blue[dataVision.blueRobots[i].robot_id()]){
-			if(!set_robots_blue[i]){
+		if(dataVision.blueRobots[i].has_robot_id()){ //work only if robot has ID
+			if(!set_robots_blue[dataVision.blueRobots[i].robot_id()]){
 				
 				bot_blue.x = dataVision.blueRobots[i].x();
 				bot_blue.y = dataVision.blueRobots[i].y();
@@ -44,12 +43,13 @@ void Tracker::identityTrack() {
 				
 			}
 		}
+		else
+			printf("Received robot with no ID. Ignoring it.\n");
 	}
 
 	for(int i = 0; i < dataVision.yellowRobots.size(); i++) {
-		if(!dataVision.yellowRobots[i].has_robot_id()){
-		//	if(!set_robots_yellow[dataVision.yellowRobots[i].robot_id()]){
-			if(!set_robots_yellow[i]){
+		if(dataVision.yellowRobots[i].has_robot_id()){
+			if(!set_robots_yellow[dataVision.yellowRobots[i].robot_id()]){
 				
 				bot_yellow.x = dataVision.yellowRobots[i].x();
 				bot_yellow.y = dataVision.yellowRobots[i].y();
@@ -61,6 +61,8 @@ void Tracker::identityTrack() {
 				set_robots_yellow[bot_yellow.id]=1;
 			}
 		}
+		else
+			printf("Received robot with no ID. Ignoring it.\n");
 	}
 	//printMyInfo();
 }
