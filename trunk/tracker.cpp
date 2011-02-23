@@ -4,7 +4,7 @@
 #include <iostream>
 
 
-#define GAMBI_RAD_TO_DEGREE(x) ((x) * 180 / M_PI + 180) 
+#define GAMBI_RAD_TO_DEGREE(x) ((x) * 180 / M_PI ) 
 
 void Tracker::track() {
 
