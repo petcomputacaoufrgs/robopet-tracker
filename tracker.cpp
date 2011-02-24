@@ -35,22 +35,22 @@ void Tracker::identityTrack() {
 	
 	for(int i = 0; i < dataVision.blueRobots.size(); i++) {
 
-		if(dataVision.blueRobots[i].has_robot_id()){ //work only if robot has ID
+		//if(dataVision.blueRobots[i].has_robot_id()){ //work only if robot has ID
 			if(!set_robots_blue[dataVision.blueRobots[i].robot_id()]){
 				
 				bot_blue.x = dataVision.blueRobots[i].x();
 				bot_blue.y = dataVision.blueRobots[i].y();
 				bot_blue.angle = GAMBI_RAD_TO_DEGREE( dataVision.blueRobots[i].orientation() );
-				bot_blue.id = i; //dataVision.blueRobots[i].robot_id();
+				bot_blue.id = dataVision.blueRobots[i].robot_id();
 
 				//bot_blue.id == 0 ? _blues.insert(_blues.begin(), 1, bot_blue) : _blues.push_back(bot_blue);
 				_blues.push_back(bot_blue);
 				set_robots_blue[bot_blue.id]=1;
 				
 			}
-		}
-		else
-			printf("Received robot with no ID. Ignoring it.\n");
+//		}
+//		else
+//			printf("Received robot with no ID. Ignoring it.\n");
 	}
 
 	for(int i = 0; i < dataVision.yellowRobots.size(); i++) {
