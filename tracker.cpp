@@ -52,10 +52,11 @@ void Tracker::identityTrack() {
 //		else
 //			printf("Received robot with no ID. Ignoring it.\n");
 	}
-
+	
 	for(int i = 0; i < dataVision.yellowRobots.size(); i++) {
-		if(dataVision.yellowRobots[i].has_robot_id()){
-			if(!set_robots_yellow[dataVision.yellowRobots[i].robot_id()]){
+		
+		//if(dataVision.yellowRobots[i].has_robot_id()){
+			//if(!set_robots_yellow[dataVision.yellowRobots[i].robot_id()]){
 				
 				bot_yellow.x = dataVision.yellowRobots[i].x();
 				bot_yellow.y = dataVision.yellowRobots[i].y();
@@ -64,11 +65,11 @@ void Tracker::identityTrack() {
 
 				//bot_yellow.id == 0 ? _yellows.insert(_yellows.begin(), 1, bot_yellow) : _yellows.push_back(bot_yellow);
 				_yellows.push_back(bot_yellow);
-				set_robots_yellow[bot_yellow.id]=1;
-			}
-		}
-		else
-			printf("Received robot with no ID. Ignoring it.\n");
+				//set_robots_yellow[bot_yellow.id]=1;
+			//}
+		//}
+		//else
+			//printf("Received robot with no ID. Ignoring it.\n");
 	}
 	//printMyInfo();
 }
