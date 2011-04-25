@@ -11,7 +11,7 @@
 #define ERROR(MSG) printf("ERROR: Call of function %s in file %s, line %i resulted in an error! - %s\n", __FUNCTION__, __FILE__, __LINE__, MSG)
 
 #define LENGTH 6050
-#define HEIGHT 4050
+#define WIDTH 4050
 
 typedef struct _ball_ {
 	double x,y;
@@ -26,6 +26,8 @@ typedef struct _visiontotracker_ {
 	vector<SSL_DetectionBall> balls;
 	vector<SSL_DetectionRobot> blueRobots;
 	vector<SSL_DetectionRobot> yellowRobots;
+	int fieldLength;
+	int fieldWidth;
 }VisionToTracker;
 
 class Tracker {
