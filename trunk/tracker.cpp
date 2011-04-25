@@ -160,49 +160,60 @@ void Tracker::send() {
 
 void Tracker::receiveFromVision() {
 
-	int balls_n, robots_blue_n, robots_yellow_n;
+	int balls_n, robots_blue_n, robots_yellow_n, field_length, field_width;
 
 	SSL_WrapperPacket packet;
-	if(visiontotracker->receive(packet) && packet.has_detection()) {
-		printf("----------------------------");
-		printf("Received Vision-To-TRACKER!\n");
-		SSL_DetectionFrame detection = packet.detection();
+	if(visiontotracker->receive(packet)){
+		if(packet.has_detection()){
+			printf("----------------------------");
+			printf("Received Vision-To-TRACKER!\n");
+			SSL_DetectionFrame detection = packet.detection();
 
-		balls_n = detection.balls_size();
-		robots_blue_n =  detection.robots_blue_size();
-		robots_yellow_n =  detection.robots_yellow_size();
+			balls_n = detection.balls_size();
+			robots_blue_n =  detection.robots_blue_size();
+			robots_yellow_n =  detection.robots_yellow_size();
 
-		dataVision.balls.clear();
-		dataVision.blueRobots.clear();
-		dataVision.yellowRobots.clear();
+			dataVision.balls.clear();
+			dataVision.blueRobots.clear();
+			dataVision.yellowRobots.clear();
 
-/*		bot_blue.x = dataVision.blueRobots[i].x();
-		bot_blue.y = dataVision.blueRobots[i].y();
-		bot_blue.angle = dataVision.blueRobots[i].orientation();
-		bot_blue.id = dataVision.blueRobots[i].robot_id();*/
+	      /*bot_blue.x = dataVision.blueRobots[i].x();
+			bot_blue.y = dataVision.blueRobots[i].y();
+			bot_blue.angle = dataVision.blueRobots[i].orientation();
+			bot_blue.id = dataVision.blueRobots[i].robot_id();*/
 
-		//Ball info:
-		for (int i = 0; i < balls_n; i++) {
-			printf("ball[%i] = %f,%f\n",i, detection.balls(i).x(), detection.balls(i).y());
-			dataVision.balls.push_back(detection.balls(i));
+			//Ball info:
+			for (int i = 0; i < balls_n; i++) {
+				printf("ball[%i] = %f,%f\n",i, detection.balls(i).x(), detection.balls(i).y());
+				dataVision.balls.push_back(detection.balls(i));
+			}
+
+			//Blue robot info:
+			for (int i = 0; i < robots_blue_n; i++) {
+				printf("robot[%i] = %f,%f\n",i, detection.robots_blue(i).x(), detection.robots_blue(i).y());
+				dataVision.blueRobots.push_back(detection.robots_blue(i));
+			}
+
+			//Yellow robot info:
+			for (int i = 0; i < robots_yellow_n; i++) {
+				printf("robot[%i] = %f,%f\n",i, detection.robots_yellow(i).x(), detection.robots_yellow(i).y());
+				dataVision.yellowRobots.push_back(detection.robots_yellow(i));
+			}
+
+			printf("balls_n = %i\n", balls_n);
+			printf("robots_blue_n = %i\n", robots_blue_n);
+			printf("robots_yellow_n = %i\n", robots_yellow_n);
 		}
-
-		//Blue robot info:
-		for (int i = 0; i < robots_blue_n; i++) {
-			printf("robot[%i] = %f,%f\n",i, detection.robots_blue(i).x(), detection.robots_blue(i).y());
-			dataVision.blueRobots.push_back(detection.robots_blue(i));
+		if(packet.has_geometry()){
+			SSL_GeometryFieldSize field = packet.geometry().field();
+			
+			dataVision.fieldLength = field.field_length();
+			dataVision.fieldWidth =  field.field_width();
+			
+			printf("fieldLength = %i\n", dataVision.fieldLength);
+			printf("fieldWidth = %i\n", dataVision.fieldWidth);
 		}
-
-		//Yellow robot info:
-		for (int i = 0; i < robots_yellow_n; i++) {
-			printf("robot[%i] = %f,%f\n",i, detection.robots_yellow(i).x(), detection.robots_yellow(i).y());
-			dataVision.yellowRobots.push_back(detection.robots_yellow(i));
-		}
-
-		printf("balls_n = %i\n", balls_n);
-		printf("robots_blue_n = %i\n", robots_blue_n);
-		printf("robots_yellow_n = %i\n", robots_yellow_n);
-
+		
 		convertCoordinates();
 	}
 }
@@ -355,19 +366,22 @@ void Tracker::setYellow(TrackerRobot yellow, int index) {
 
 void Tracker::convertCoordinates() {
 
+	double scaleFactorLength = (float)LENGTH / dataVision.fieldLength,
+			scaleFactorWidth = (float) WIDTH / dataVision.fieldWidth;
+
 	for(int i = 0; i < dataVision.balls.size(); i++) {
-		dataVision.balls[i].set_x(dataVision.balls[i].x() + LENGTH/2.);
-		dataVision.balls[i].set_y(dataVision.balls[i].y() + HEIGHT/2.);
+		dataVision.balls[i].set_x( (dataVision.balls[i].x() * scaleFactorLength) + LENGTH/2. );
+		dataVision.balls[i].set_y( (dataVision.balls[i].y() * scaleFactorWidth) + WIDTH/2. );
 	}
 
 	for(int i = 0; i < dataVision.blueRobots.size(); i++) {
-		dataVision.blueRobots[i].set_x(dataVision.blueRobots[i].x() + LENGTH/2.);
-		dataVision.blueRobots[i].set_y(dataVision.blueRobots[i].y() + HEIGHT/2.);
+		dataVision.blueRobots[i].set_x( (dataVision.blueRobots[i].x() * scaleFactorLength) + LENGTH/2.);
+		dataVision.blueRobots[i].set_y( (dataVision.blueRobots[i].y() * scaleFactorWidth) + WIDTH/2.);
 	}
 
 	for(int i = 0; i < dataVision.yellowRobots.size(); i++) {
-		dataVision.yellowRobots[i].set_x(dataVision.yellowRobots[i].x() + LENGTH/2.);
-		dataVision.yellowRobots[i].set_y(dataVision.yellowRobots[i].y() + HEIGHT/2.);
+		dataVision.yellowRobots[i].set_x( (dataVision.yellowRobots[i].x() * scaleFactorLength) + LENGTH/2.);
+		dataVision.yellowRobots[i].set_y( (dataVision.yellowRobots[i].y() * scaleFactorWidth) + WIDTH/2.);
 	}
 }
 
