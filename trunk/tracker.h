@@ -43,8 +43,8 @@ class Tracker {
 
 		TrackerBall _ball;
 		vector<TrackerRobot> _blues;
-		vector<TrackerRobot> _yellows;
-
+		vector<TrackerRobot> _yellows;		
+		
 		bool usingSimulator;
 
 	public:
