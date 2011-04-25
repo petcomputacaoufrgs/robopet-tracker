@@ -10,7 +10,8 @@ void Tracker::track() {
 
 	if(usingSimulator) return;
 
-	identityTrack();
+	if(receivedMinInfo)
+		identityTrack();
 }
 
 void Tracker::identityTrack() {
@@ -154,13 +155,14 @@ void Tracker::receive() {
 
 void Tracker::send() {
 
-	sendToAI();
+	if(receivedMinInfo)
+		sendToAI();
+	else
+		printf("Waiting for minimal necessary information.\n");
 
 }
 
 void Tracker::receiveFromVision() {
-
-	int balls_n, robots_blue_n, robots_yellow_n, field_length, field_width;
 
 	SSL_WrapperPacket packet;
 	if(visiontotracker->receive(packet)){
@@ -169,40 +171,38 @@ void Tracker::receiveFromVision() {
 			printf("Received Vision-To-TRACKER!\n");
 			SSL_DetectionFrame detection = packet.detection();
 
-			balls_n = detection.balls_size();
-			robots_blue_n =  detection.robots_blue_size();
-			robots_yellow_n =  detection.robots_yellow_size();
+			dataVision.balls_n = detection.balls_size();
+			dataVision.robots_blue_n =  detection.robots_blue_size();
+			dataVision.robots_yellow_n =  detection.robots_yellow_size();
 
-			dataVision.balls.clear();
-			dataVision.blueRobots.clear();
-			dataVision.yellowRobots.clear();
-
-	      /*bot_blue.x = dataVision.blueRobots[i].x();
-			bot_blue.y = dataVision.blueRobots[i].y();
-			bot_blue.angle = dataVision.blueRobots[i].orientation();
-			bot_blue.id = dataVision.blueRobots[i].robot_id();*/
+			if(dataVision.balls_n > 0)
+				dataVision.balls.clear();
+			if(dataVision.robots_blue_n > 0)
+				dataVision.blueRobots.clear();
+			if(dataVision.robots_yellow_n > 0)
+				dataVision.yellowRobots.clear();
 
 			//Ball info:
-			for (int i = 0; i < balls_n; i++) {
-				printf("ball[%i] = %f,%f\n",i, detection.balls(i).x(), detection.balls(i).y());
+			for (int i = 0; i < dataVision.balls_n; i++) {
+				//printf("ball[%i] = %f,%f\n",i, detection.balls(i).x(), detection.balls(i).y());
 				dataVision.balls.push_back(detection.balls(i));
 			}
 
 			//Blue robot info:
-			for (int i = 0; i < robots_blue_n; i++) {
-				printf("robot[%i] = %f,%f\n",i, detection.robots_blue(i).x(), detection.robots_blue(i).y());
+			for (int i = 0; i < dataVision.robots_blue_n; i++) {
+				//printf("robot[%i] = %f,%f\n",i, detection.robots_blue(i).x(), detection.robots_blue(i).y());
 				dataVision.blueRobots.push_back(detection.robots_blue(i));
 			}
 
 			//Yellow robot info:
-			for (int i = 0; i < robots_yellow_n; i++) {
-				printf("robot[%i] = %f,%f\n",i, detection.robots_yellow(i).x(), detection.robots_yellow(i).y());
+			for (int i = 0; i < dataVision.robots_yellow_n; i++) {
+				//printf("robot[%i] = %f,%f\n",i, detection.robots_yellow(i).x(), detection.robots_yellow(i).y());
 				dataVision.yellowRobots.push_back(detection.robots_yellow(i));
 			}
 
-			printf("balls_n = %i\n", balls_n);
-			printf("robots_blue_n = %i\n", robots_blue_n);
-			printf("robots_yellow_n = %i\n", robots_yellow_n);
+			printf("balls_n = %i\n", dataVision.balls_n);
+			printf("robots_blue_n = %i\n", dataVision.robots_blue_n);
+			printf("robots_yellow_n = %i\n", dataVision.robots_yellow_n);
 		}
 		if(packet.has_geometry()){
 			SSL_GeometryFieldSize field = packet.geometry().field();
@@ -212,9 +212,12 @@ void Tracker::receiveFromVision() {
 			
 			printf("fieldLength = %i\n", dataVision.fieldLength);
 			printf("fieldWidth = %i\n", dataVision.fieldWidth);
+			
+			this->receivedMinInfo = true;
 		}
 		
-		convertCoordinates();
+		if(receivedMinInfo)
+			convertCoordinates();
 	}
 }
 
@@ -278,13 +281,14 @@ void Tracker::sendToAI() {
 
 	TrackerToAI *trackertoaiPacket = packet.mutable_trackertoai();
 	TrackerToAI::Ball *b = trackertoaiPacket->mutable_ball();
-//	printf("----------------------------\n");
-//	printf("Send TRACKER-To-AI!\n");
+	printf("----------------------------\n");
+	printf("Send TRACKER-To-AI!\n");
 	b->set_x(_ball.x);
 	b->set_y(_ball.y);
 
 	printf("ball (%5i, %5i) --\n", b->x(), b->y());
 
+	printf("blue robots sent:\n");
 	for(int i = 0; i < _blues.size(); i++) {
 
 		TrackerToAI::Robot *r = trackertoaiPacket->add_blue_robots();
@@ -293,9 +297,10 @@ void Tracker::sendToAI() {
 		r->set_theta(_blues[i].angle);
 		r->set_id(_blues[i].id);
 
-//		printf("cur_pos[%5i](%5i, %5i, %5i) --\n", r->id(), r->x(), r->y(), r->theta());
+		printf("%i:\t(%5i, %5i, %5i) --\n", r->id(), r->x(), r->y(), r->theta());
 	}
 
+	printf("yellow robots sent:\n");
 	for(int i = 0; i < _yellows.size(); i++) {
 
 		TrackerToAI::Robot *r = trackertoaiPacket->add_yellow_robots();
@@ -304,7 +309,7 @@ void Tracker::sendToAI() {
 		r->set_theta(_yellows[i].angle);
 		r->set_id(_yellows[i].id);
 
-//		printf("cur_pos[%5i](%5i, %5i, %5i) --\n", r->id(), r->x(), r->y(), r->theta());
+		printf("%i:\t(%5i, %5i, %5i) --\n", r->id(), r->x(), r->y(), r->theta());
 	}
 
 	 trackertoai->send(packet);
@@ -369,25 +374,30 @@ void Tracker::convertCoordinates() {
 	double scaleFactorLength = (float)LENGTH / dataVision.fieldLength,
 			scaleFactorWidth = (float) WIDTH / dataVision.fieldWidth;
 
-	for(int i = 0; i < dataVision.balls.size(); i++) {
-		dataVision.balls[i].set_x( (dataVision.balls[i].x() * scaleFactorLength) + LENGTH/2. );
-		dataVision.balls[i].set_y( (dataVision.balls[i].y() * scaleFactorWidth) + WIDTH/2. );
-	}
+	if(dataVision.balls_n > 0)
+		for(int i = 0; i < dataVision.balls.size(); i++) {
+			dataVision.balls[i].set_x( (dataVision.balls[i].x() * scaleFactorLength) + LENGTH/2. );
+			dataVision.balls[i].set_y( (dataVision.balls[i].y() * scaleFactorWidth) + WIDTH/2. );
+		}
 
-	for(int i = 0; i < dataVision.blueRobots.size(); i++) {
-		dataVision.blueRobots[i].set_x( (dataVision.blueRobots[i].x() * scaleFactorLength) + LENGTH/2.);
-		dataVision.blueRobots[i].set_y( (dataVision.blueRobots[i].y() * scaleFactorWidth) + WIDTH/2.);
-	}
+	if(dataVision.robots_blue_n > 0)
+		for(int i = 0; i < dataVision.blueRobots.size(); i++) {
+			dataVision.blueRobots[i].set_x( (dataVision.blueRobots[i].x() * scaleFactorLength) + LENGTH/2.);
+			dataVision.blueRobots[i].set_y( (dataVision.blueRobots[i].y() * scaleFactorWidth) + WIDTH/2.);
+		}
 
-	for(int i = 0; i < dataVision.yellowRobots.size(); i++) {
-		dataVision.yellowRobots[i].set_x( (dataVision.yellowRobots[i].x() * scaleFactorLength) + LENGTH/2.);
-		dataVision.yellowRobots[i].set_y( (dataVision.yellowRobots[i].y() * scaleFactorWidth) + WIDTH/2.);
-	}
+	if(dataVision.robots_yellow_n > 0)
+		for(int i = 0; i < dataVision.yellowRobots.size(); i++) {
+			dataVision.yellowRobots[i].set_x( (dataVision.yellowRobots[i].x() * scaleFactorLength) + LENGTH/2.);
+			dataVision.yellowRobots[i].set_y( (dataVision.yellowRobots[i].y() * scaleFactorWidth) + WIDTH/2.);
+		}
 }
 
 Tracker::Tracker(bool sim) {
 
 	usingSimulator = sim;
+	
+	receivedMinInfo = false;
 
 	simtotracker = new RoboPETClient(PORT_SIM_TO_TRACKER, IP_SIM_TO_TRACKER);
 	simtotracker->open(false);
