@@ -23,6 +23,7 @@ typedef struct _robot_ {
 } TrackerRobot;
 
 typedef struct _visiontotracker_ {
+	int balls_n, robots_blue_n, robots_yellow_n;
 	vector<SSL_DetectionBall> balls;
 	vector<SSL_DetectionRobot> blueRobots;
 	vector<SSL_DetectionRobot> yellowRobots;
@@ -48,6 +49,7 @@ class Tracker {
 		vector<TrackerRobot> _yellows;		
 		
 		bool usingSimulator;
+		bool receivedMinInfo;
 
 	public:
 
