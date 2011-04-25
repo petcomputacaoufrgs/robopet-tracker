@@ -20,14 +20,73 @@ void Tracker::identityTrack() {
 	TrackerBall ball;
 	TrackerRobot bot_blue;
 	TrackerRobot bot_yellow;
-
-	//first ball
-	if(dataVision.balls.size()>=1){
+	
+	TrackerBall ballOld[dataVision.balls.size()];
+	TrackerBall ballReal;
+	double distanceToBallReal[dataVision.balls.size()];
+	double nearer;
+	int nearerId;
+	
+	//*****************************************************************************//
+	/* IT'S WORKING !! (Gabriel)
+	 Tem que começar vendo APENAS UMA bola, mas depois 
+	 pode por mais bolas que ele reconhece a mais provavel, que sera a correta ! õ/
+	 */
+	
+	
+	if(dataVision.balls.size()==1){
 		ball.x = dataVision.balls[0].x();
 		ball.y = dataVision.balls[0].y();
 
 		setBall(ball);
+	}	
+	
+	if(dataVision.balls.size()>1)
+	{
+				
+		ballReal = getBall();
+		
+		nearer = 9999;
+		nearerId = 0;
+		
+		//armazena todas bolas que ta vendo no vetor de bolas
+		for(int i=0; i<dataVision.balls.size(); i++){
+								
+			if(dataVision.balls.size()>=1){
+				ball.x = dataVision.balls[i].x();
+				ball.y = dataVision.balls[i].y();
+
+				ballOld[i] = ball;
+				
+				//calcula distancia das bolas vistas, com a bola antiga
+				distanceToBallReal[i] = sqrt( (ballOld[i].x - ballReal.x)*(ballOld[i].x - ballReal.x)
+											+ (ballOld[i].y - ballReal.y)*(ballOld[i].y - ballReal.y));
+											
+	//			cout << "Distancia pra bola: " << distanceToBallReal[i] << endl;
+											
+											
+				if(nearer > distanceToBallReal[i]){
+					nearer = distanceToBallReal[i];
+					nearerId = i;
+				}			
+			}
+		}	
+		setBall(ballOld[nearerId]);
 	}
+	
+	
+	
+	//*****************************************************************************//
+	
+	
+
+	//first ball
+	/*if(dataVision.balls.size()>=1){
+		ball.x = dataVision.balls[0].x();
+		ball.y = dataVision.balls[0].y();
+
+		setBall(ball);
+	}*/
 
 	//first robot blue ->robot.robot_id();
 	//		setBlues(vector<TrackerRobot> blues);
@@ -213,7 +272,7 @@ void Tracker::sendToAI() {
 	b->set_x(_ball.x);
 	b->set_y(_ball.y);
 
-	//printf("ball (%5i, %5i) --\n", b->x(), b->y());
+	printf("ball (%5i, %5i) --\n", b->x(), b->y());
 
 	for(int i = 0; i < _blues.size(); i++) {
 
@@ -223,7 +282,7 @@ void Tracker::sendToAI() {
 		r->set_theta(_blues[i].angle);
 		r->set_id(_blues[i].id);
 
-		printf("cur_pos[%5i](%5i, %5i, %5i) --\n", r->id(), r->x(), r->y(), r->theta());
+//		printf("cur_pos[%5i](%5i, %5i, %5i) --\n", r->id(), r->x(), r->y(), r->theta());
 	}
 
 	for(int i = 0; i < _yellows.size(); i++) {
@@ -234,7 +293,7 @@ void Tracker::sendToAI() {
 		r->set_theta(_yellows[i].angle);
 		r->set_id(_yellows[i].id);
 
-		printf("cur_pos[%5i](%5i, %5i, %5i) --\n", r->id(), r->x(), r->y(), r->theta());
+//		printf("cur_pos[%5i](%5i, %5i, %5i) --\n", r->id(), r->x(), r->y(), r->theta());
 	}
 
 	 trackertoai->send(packet);
