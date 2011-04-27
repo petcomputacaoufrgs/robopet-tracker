@@ -1,5 +1,5 @@
 CC = colorgcc
-FLAGS = -Wall -I$(ROBOPET_PATH) -I$(COMMUNICATION_H) -I$(SOCKETS_PATH) -lstdc++ -lprotobuf -lQtCore -lpthread
+FLAGS = -Wall -lstdc++ -lprotobuf -lQtCore -lpthread
 
 #AI_PATH = ../IA/lib
 ROBOPET_PATH = ../lib
@@ -13,7 +13,7 @@ COMMUNICATION_LIB = $(COMMUNICATION_PATH)/communication.a
 VISION_SOCKETS_PATH = ./socket
 VISION_PROTO_PATH = ./proto
 VISION_PACKETS_PATH = ./packets
-INC_PATHS = -I$(VISION_SOCKETS_PATH) -I$(VISION_PACKETS_PATH) -I/usr/include/qt4 -I/usr/include/qt4/QtCore -I$(COMMUNICATION_PATH)/socket -I$(COMMUNICATION_PATH)/packets
+INC_PATHS = -I$(ROBOPET_PATH) -I$(COMMUNICATION_H) -I$(SOCKETS_PATH) -I$(VISION_SOCKETS_PATH) -I$(VISION_PACKETS_PATH) -I/usr/include/qt4 -I/usr/include/qt4/QtCore -I$(COMMUNICATION_PATH)/socket -I$(COMMUNICATION_PATH)/packets
 
 PROTOBUF_FILES_H = $(VISION_PACKETS_PATH)/messages_robocup_ssl_detection.pb.h \
 				$(VISION_PACKETS_PATH)/messages_robocup_ssl_geometry.pb.h \

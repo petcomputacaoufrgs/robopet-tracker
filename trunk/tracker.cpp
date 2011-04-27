@@ -3,6 +3,11 @@
 
 #include <iostream>
 
+#include "global.cpp"
+
+extern double scaleFactorLength;
+extern double scaleFactorWidth;
+
 
 #define GAMBI_RAD_TO_DEGREE(x) ((x) * 180 / M_PI ) 
 
@@ -371,8 +376,8 @@ void Tracker::setYellow(TrackerRobot yellow, int index) {
 
 void Tracker::convertCoordinates() {
 
-	double scaleFactorLength = (float)LENGTH / dataVision.fieldLength,
-			scaleFactorWidth = (float) WIDTH / dataVision.fieldWidth;
+	scaleFactorLength = (float)LENGTH / dataVision.fieldLength;
+	scaleFactorWidth = (float) WIDTH / dataVision.fieldWidth;
 
 	if(dataVision.balls_n > 0)
 		for(int i = 0; i < dataVision.balls.size(); i++) {
