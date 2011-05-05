@@ -36,7 +36,7 @@ void Tracker::identityTrack() {
 	//*****************************************************************************//
 	/* IT'S WORKING !! (Gabriel)
 	 Tem que começar vendo APENAS UMA bola, mas depois 
-	 pode por mais bolas que ele reconhece a mais provavel, que sera a correta ! õ/
+	 pode por mais bolas que ele reconhece a mais provavel, \õ/
 	 */
 	
 	
@@ -65,11 +65,10 @@ void Tracker::identityTrack() {
 				ballOld[i] = ball;
 				
 				//calcula distancia das bolas vistas, com a bola antiga
-				distanceToBallReal[i] = sqrt( (ballOld[i].x - ballReal.x)*(ballOld[i].x - ballReal.x)
-											+ (ballOld[i].y - ballReal.y)*(ballOld[i].y - ballReal.y));
+				distanceToBallReal[i] = (ballOld[i].x - ballReal.x)*(ballOld[i].x - ballReal.x)
+											+ (ballOld[i].y - ballReal.y)*(ballOld[i].y - ballReal.y);
 											
-	//			cout << "Distancia pra bola: " << distanceToBallReal[i] << endl;
-											
+	//			printf("Distancia pra bola: %lf", distanceToBallReal[i]);											
 											
 				if(nearer > distanceToBallReal[i]){
 					nearer = distanceToBallReal[i];
@@ -81,10 +80,8 @@ void Tracker::identityTrack() {
 	}
 	
 	
-	
 	//*****************************************************************************//
-	
-	
+		
 
 	//first ball
 	/*if(dataVision.balls.size()>=1){
@@ -97,6 +94,40 @@ void Tracker::identityTrack() {
 	//first robot blue ->robot.robot_id();
 	//		setBlues(vector<TrackerRobot> blues);
 	//		setBlue(TrackerRobot blue, int index);
+
+	
+	/*
+	 * *********************************************************
+	 *tentando imlpementar um filtro para os robos (Gabriel)
+	int robots_blues_id_old[dataVision.blueRobots.size()]; 
+	
+	//armazena id dos manolos
+	for(int i=0; i < dataVision.blueRobots.size(); i++)	
+		robots_blues_id_old[i] = dataVision.blueRobots[i].robot_id();
+	
+	
+	int index_iguais[dataVision.blueRobots.size()];
+	int cont=0;
+	int trocou = 0 ;
+	
+	//ver quais ID's repetem
+	for(int i=0; i< dataVision.blueRobots.size(); i++){
+		j = i;
+		for (int j = 0; j< dataVision.blueRobots.size(); j++){
+			if(robots_blues_id_old[i] == robots_blues_id_old[j]){
+				index_iguais[cont] = j;
+				cont++
+				trocou = 1;
+			}
+		}
+		if(trocou == 1){
+			index_iguais[cont] = i;
+			cont++
+		}
+	}
+	
+	***********************************************/
+	
 
 	for(int i = 0; i < dataVision.blueRobots.size(); i++) {
 
