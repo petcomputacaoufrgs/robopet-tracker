@@ -155,8 +155,8 @@ void Tracker::receiveFromVision() {
 	SSL_WrapperPacket packet;
 	if(visiontotracker->receive(packet)){
 		if(packet.has_detection()){
-			printf("----------------------------");
-			printf("Received Vision-To-TRACKER!\n");
+//			printf("----------------------------");
+//			printf("Received Vision-To-TRACKER!\n");
 			SSL_DetectionFrame detection = packet.detection();
 
 			dataVision.balls_n = detection.balls_size();
@@ -188,9 +188,9 @@ void Tracker::receiveFromVision() {
 				dataVision.yellowRobots.push_back(detection.robots_yellow(i));
 			}
 
-			printf("balls_n = %i\n", dataVision.balls_n);
-			printf("robots_blue_n = %i\n", dataVision.robots_blue_n);
-			printf("robots_yellow_n = %i\n", dataVision.robots_yellow_n);
+			//printf("balls_n = %i\n", dataVision.balls_n);
+			//printf("robots_blue_n = %i\n", dataVision.robots_blue_n);
+			//printf("robots_yellow_n = %i\n", dataVision.robots_yellow_n);
 		}
 		if(packet.has_geometry()){
 			SSL_GeometryFieldSize field = packet.geometry().field();
@@ -301,6 +301,9 @@ void Tracker::sendToAI() {
 	}
 
 	 trackertoai->send(packet);
+	 
+	 usleep(10000);
+	 clrscr();
 }
 
 //Getters
