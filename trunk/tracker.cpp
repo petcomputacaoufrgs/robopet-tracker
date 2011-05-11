@@ -33,13 +33,9 @@ void Tracker::identityTrack() {
 	double nearer;
 	int nearerId;
 	
-	//*****************************************************************************//
-	/* IT'S WORKING !! (Gabriel)
-	 Tem que começar vendo APENAS UMA bola, mas depois 
-	 pode por mais bolas que ele reconhece a mais provavel, \õ/
-	 */
 	
-	
+
+	//if you see a ball, then it is correct
 	if(dataVision.balls.size()==1){
 		ball.x = dataVision.balls[0].x();
 		ball.y = dataVision.balls[0].y();
@@ -47,6 +43,7 @@ void Tracker::identityTrack() {
 		setBall(ball);
 	}	
 	
+	//if you have more than one ball, then picks the one that is closer to the former
 	if(dataVision.balls.size()>1)
 	{
 				
@@ -79,56 +76,11 @@ void Tracker::identityTrack() {
 		setBall(ballOld[nearerId]);
 	}
 	
-	
-	//*****************************************************************************//
-		
-
-	//first ball
-	/*if(dataVision.balls.size()>=1){
-		ball.x = dataVision.balls[0].x();
-		ball.y = dataVision.balls[0].y();
-
-		setBall(ball);
-	}*/
-
 	//first robot blue ->robot.robot_id();
 	//		setBlues(vector<TrackerRobot> blues);
 	//		setBlue(TrackerRobot blue, int index);
 
 	
-	/*
-	 * *********************************************************
-	 *tentando imlpementar um filtro para os robos (Gabriel)
-	int robots_blues_id_old[dataVision.blueRobots.size()]; 
-	
-	//armazena id dos manolos
-	for(int i=0; i < dataVision.blueRobots.size(); i++)	
-		robots_blues_id_old[i] = dataVision.blueRobots[i].robot_id();
-	
-	
-	int index_iguais[dataVision.blueRobots.size()];
-	int cont=0;
-	int trocou = 0 ;
-	
-	//ver quais ID's repetem
-	for(int i=0; i< dataVision.blueRobots.size(); i++){
-		j = i;
-		for (int j = 0; j< dataVision.blueRobots.size(); j++){
-			if(robots_blues_id_old[i] == robots_blues_id_old[j]){
-				index_iguais[cont] = j;
-				cont++
-				trocou = 1;
-			}
-		}
-		if(trocou == 1){
-			index_iguais[cont] = i;
-			cont++
-		}
-	}
-	
-	***********************************************/
-	
-
 	for(int i = 0; i < dataVision.blueRobots.size(); i++) {
 
 		//if(dataVision.blueRobots[i].has_robot_id()){ //work only if robot has ID
