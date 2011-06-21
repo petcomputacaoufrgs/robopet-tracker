@@ -201,6 +201,9 @@ void Tracker::receiveFromVision() {
 			printf("fieldLength = %i\n", dataVision.fieldLength);
 			printf("fieldWidth = %i\n", dataVision.fieldWidth);
 			
+			scaleFactorLength = (float)LENGTH / dataVision.fieldLength;
+			scaleFactorWidth = (float) WIDTH / dataVision.fieldWidth;
+			
 			this->receivedMinInfo = true;
 		}
 		
@@ -258,6 +261,11 @@ void Tracker::receiveFromSim()
 			bot_yellow.id = dataSim.yellow_robots(i).id();
 			_yellows.push_back(bot_yellow);
 		}
+		
+		//xunxo:
+		scaleFactorLength = 1.;
+		scaleFactorWidth = 1.;
+		this->receivedMinInfo = true;
 	}
 	else
 		printf("Didn't receive SIM-To-TRACKER.\n");
@@ -361,9 +369,6 @@ void Tracker::setYellow(TrackerRobot yellow, int index) {
 }
 
 void Tracker::convertCoordinates() {
-
-	scaleFactorLength = (float)LENGTH / dataVision.fieldLength;
-	scaleFactorWidth = (float) WIDTH / dataVision.fieldWidth;
 
 	if(dataVision.balls_n > 0)
 		for(int i = 0; i < dataVision.balls.size(); i++) {
