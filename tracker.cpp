@@ -239,7 +239,6 @@ void Tracker::receiveFromSim()
 	if (simtotracker->receive(packet) && packet.has_simtotracker()) {
 		printf("----------------------------");
 		printf("Received SIM-To-TRACKER!\n");
-		system("clear");
 		dataSim = packet.simtotracker();
 
 		_ball.x = dataSim.ball().x();
