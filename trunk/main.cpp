@@ -27,6 +27,7 @@ int main(int argc, char **argv)
 		tracker.receive();
 		tracker.track();
 		tracker.send();
+		system("clear");
 	}
 
     return 0;
