@@ -272,45 +272,45 @@ void Tracker::receiveFromSim()
 
 void Tracker::sendToAI() {
 
-	RoboPET_WrapperPacket packet;
+	if(_blues.size()!=0 || _yellows.size()!=0) {
+		
+		RoboPET_WrapperPacket packet;
 
-	TrackerToAI *trackertoaiPacket = packet.mutable_trackertoai();
-	TrackerToAI::Ball *b = trackertoaiPacket->mutable_ball();
-	printf("----------------------------\n");
-	printf("Send TRACKER-To-AI!\n");
-	b->set_x(_ball.x);
-	b->set_y(_ball.y);
+		TrackerToAI *trackertoaiPacket = packet.mutable_trackertoai();
+		TrackerToAI::Ball *b = trackertoaiPacket->mutable_ball();
+		printf("----------------------------\n");
+		printf("Send TRACKER-To-AI!\n");
+		b->set_x(_ball.x);
+		b->set_y(_ball.y);
 
-	printf("ball (%5i, %5i) --\n", b->x(), b->y());
+		printf("ball (%5i, %5i) --\n", b->x(), b->y());		
 
-	printf("blue robots sent:\n");
-	for(int i = 0; i < _blues.size(); i++) {
+		printf("blue robots sent:\n");
+		for(int i = 0; i < _blues.size(); i++) {
 
-		TrackerToAI::Robot *r = trackertoaiPacket->add_blue_robots();
-		r->set_x(_blues[i].x);
-		r->set_y(_blues[i].y);
-		r->set_theta(_blues[i].angle);
-		r->set_id(_blues[i].id);
+			TrackerToAI::Robot *r = trackertoaiPacket->add_blue_robots();
+			r->set_x(_blues[i].x);
+			r->set_y(_blues[i].y);
+			r->set_theta(_blues[i].angle);
+			r->set_id(_blues[i].id);
 
-		printf("%i:\t(%5i, %5i, %5i) --\n", r->id(), r->x(), r->y(), r->theta());
-	}
+			printf("%i:\t(%5i, %5i, %5i) --\n", r->id(), r->x(), r->y(), r->theta());
+		}
 
-	printf("yellow robots sent:\n");
-	for(int i = 0; i < _yellows.size(); i++) {
+		printf("yellow robots sent:\n");
+		for(int i = 0; i < _yellows.size(); i++) {
 
-		TrackerToAI::Robot *r = trackertoaiPacket->add_yellow_robots();
-		r->set_x(_yellows[i].x);
-		r->set_y(_yellows[i].y);
-		r->set_theta(_yellows[i].angle);
-		r->set_id(_yellows[i].id);
+			TrackerToAI::Robot *r = trackertoaiPacket->add_yellow_robots();
+			r->set_x(_yellows[i].x);
+			r->set_y(_yellows[i].y);
+			r->set_theta(_yellows[i].angle);
+			r->set_id(_yellows[i].id);
 
-		printf("%i:\t(%5i, %5i, %5i) --\n", r->id(), r->x(), r->y(), r->theta());
-	}
+			printf("%i:\t(%5i, %5i, %5i) --\n", r->id(), r->x(), r->y(), r->theta());
+		}
 
-	 trackertoai->send(packet);
-	 
-	 usleep(10000);
-	 clrscr();
+		 trackertoai->send(packet);
+	 }
 }
 
 //Getters

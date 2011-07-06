@@ -28,6 +28,7 @@ int main(int argc, char **argv)
 		tracker.track();
 		tracker.send();
 		system("clear");
+		usleep(10000);
 	}
 
     return 0;
