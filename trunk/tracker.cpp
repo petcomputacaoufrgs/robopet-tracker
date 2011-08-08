@@ -395,10 +395,10 @@ Tracker::Tracker(bool sim) {
 	simtotracker = new RoboPETClient(PORT_SIM_TO_TRACKER, IP_SIM_TO_TRACKER);
 	simtotracker->open(false);
 
-	aitotracker = new RoboPETClient(PORT_AI_TO_TRACKER, "localhost");
-	aitotracker->open(false);
+	//aitotracker = new RoboPETClient(PORT_AI_TO_TRACKER, "localhost");
+	//aitotracker->open(false);
 
-	radiototracker = new RoboPETClient(PORT_RADIO_TO_TRACKER, IP_RADIO_TO_TRACKER);
+	radiototracker = new RoboPETClient();//PORT_RADIO_TO_TRACKER, IP_RADIO_TO_TRACKER);
 	radiototracker->open(false);
 
 	visiontotracker = new RoboCupSSLClient();
