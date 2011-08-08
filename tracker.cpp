@@ -3,10 +3,8 @@
 
 #include <iostream>
 
-#include "global.cpp"
-
-extern double scaleFactorLength;
-extern double scaleFactorWidth;
+double scaleFactorLength;
+double scaleFactorWidth;
 
 
 #define GAMBI_RAD_TO_DEGREE(x) ((x) * 180 / M_PI ) 
