@@ -49,11 +49,12 @@ class Tracker {
 		vector<TrackerRobot> _yellows;		
 		
 		bool usingSimulator;
+		bool isVerbose;
 		bool receivedMinInfo;
-
+		
 	public:
 
-		Tracker(bool sim = false);
+		Tracker(bool sim = false, bool verbose = true);
 		~Tracker();
 
 		void track();
