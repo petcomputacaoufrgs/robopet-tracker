@@ -214,8 +214,10 @@ void Tracker::receiveFromRadio()
 {
 	RoboPET_WrapperPacket packet;
 	if (radiototracker->receive(packet) && packet.has_radiototracker()) {
-		printf("----------------------------");
-		printf("Received Radio-To-TRACKER!\n");
+		if(isVerbose){
+			printf("----------------------------");
+			printf("Received Radio-To-TRACKER!\n");
+		}
 	}
 }
 
@@ -223,8 +225,10 @@ void Tracker::receiveFromAI()
 {
 	RoboPET_WrapperPacket packet;
 	if (aitotracker->receive(packet) && packet.has_aitotracker()) {
-		printf("----------------------------");
-		printf("Received AI-To-TRACKER!\n");
+		if(isVerbose) {
+			printf("----------------------------");
+			printf("Received AI-To-TRACKER!\n");
+		}
 	}
 }
 
@@ -235,8 +239,10 @@ void Tracker::receiveFromSim()
 
 	RoboPET_WrapperPacket packet;
 	if (simtotracker->receive(packet) && packet.has_simtotracker()) {
-		printf("----------------------------");
-		printf("Received SIM-To-TRACKER!\n");
+		if(isVerbose) {
+			printf("----------------------------");
+			printf("Received SIM-To-TRACKER!\n");
+		}
 		dataSim = packet.simtotracker();
 
 		_ball.x = dataSim.ball().x();
@@ -265,7 +271,8 @@ void Tracker::receiveFromSim()
 		this->receivedMinInfo = true;
 	}
 	else
-		printf("Didn't receive SIM-To-TRACKER.\n");
+		if(isVerbose)
+			printf("Didn't receive SIM-To-TRACKER.\n");
 }
 
 void Tracker::sendToAI() {
@@ -276,14 +283,18 @@ void Tracker::sendToAI() {
 
 		TrackerToAI *trackertoaiPacket = packet.mutable_trackertoai();
 		TrackerToAI::Ball *b = trackertoaiPacket->mutable_ball();
-		printf("----------------------------\n");
-		printf("Send TRACKER-To-AI!\n");
+		
 		b->set_x(_ball.x);
 		b->set_y(_ball.y);
+		
+		if(isVerbose) {
+			printf("----------------------------\n");
+			printf("Send TRACKER-To-AI!\n");
+			
+			printf("ball (%5i, %5i) --\n", b->x(), b->y());		
 
-		printf("ball (%5i, %5i) --\n", b->x(), b->y());		
-
-		printf("blue robots sent:\n");
+			printf("blue robots sent:\n");
+		}
 		for(int i = 0; i < _blues.size(); i++) {
 
 			TrackerToAI::Robot *r = trackertoaiPacket->add_blue_robots();
@@ -291,11 +302,15 @@ void Tracker::sendToAI() {
 			r->set_y(_blues[i].y);
 			r->set_theta(_blues[i].angle);
 			r->set_id(_blues[i].id);
-
-			printf("%i:\t(%5i, %5i, %5i) --\n", r->id(), r->x(), r->y(), r->theta());
+			
+			if(isVerbose) {
+				printf("%i:\t(%5i, %5i, %5i) --\n", r->id(), r->x(), r->y(), r->theta());
+			}
 		}
 
-		printf("yellow robots sent:\n");
+		if(isVerbose) {
+			printf("yellow robots sent:\n");
+		}
 		for(int i = 0; i < _yellows.size(); i++) {
 
 			TrackerToAI::Robot *r = trackertoaiPacket->add_yellow_robots();
@@ -303,8 +318,10 @@ void Tracker::sendToAI() {
 			r->set_y(_yellows[i].y);
 			r->set_theta(_yellows[i].angle);
 			r->set_id(_yellows[i].id);
-
-			printf("%i:\t(%5i, %5i, %5i) --\n", r->id(), r->x(), r->y(), r->theta());
+			
+			if(isVerbose) {
+				printf("%i:\t(%5i, %5i, %5i) --\n", r->id(), r->x(), r->y(), r->theta());
+			}
 		}
 
 		 trackertoai->send(packet);
@@ -386,9 +403,10 @@ void Tracker::convertCoordinates() {
 		}
 }
 
-Tracker::Tracker(bool sim) {
+Tracker::Tracker(bool sim, bool verbose) {
 
 	usingSimulator = sim;
+	isVerbose = verbose;
 	
 	receivedMinInfo = false;
 
