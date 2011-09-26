@@ -153,8 +153,8 @@ void Tracker::receiveFromVision() {
 	SSL_WrapperPacket packet;
 	if(visiontotracker->receive(packet)){
 		if(packet.has_detection()){
-//			printf("----------------------------");
-//			printf("Received Vision-To-TRACKER!\n");
+			printf("----------------------------");
+			printf("Received Vision-To-TRACKER!\n");
 			SSL_DetectionFrame detection = packet.detection();
 
 			dataVision.balls_n = detection.balls_size();
@@ -170,19 +170,19 @@ void Tracker::receiveFromVision() {
 
 			//Ball info:
 			for (int i = 0; i < dataVision.balls_n; i++) {
-				//printf("ball[%i] = %f,%f\n",i, detection.balls(i).x(), detection.balls(i).y());
+				printf("ball[%i] = %f,%f\n",i, detection.balls(i).x(), detection.balls(i).y());
 				dataVision.balls.push_back(detection.balls(i));
 			}
 
 			//Blue robot info:
 			for (int i = 0; i < dataVision.robots_blue_n; i++) {
-				//printf("robot[%i] = %f,%f\n",i, detection.robots_blue(i).x(), detection.robots_blue(i).y());
+				printf("robot[%i] = %f,%f\n",i, detection.robots_blue(i).x(), detection.robots_blue(i).y());
 				dataVision.blueRobots.push_back(detection.robots_blue(i));
 			}
 
 			//Yellow robot info:
 			for (int i = 0; i < dataVision.robots_yellow_n; i++) {
-				//printf("robot[%i] = %f,%f\n",i, detection.robots_yellow(i).x(), detection.robots_yellow(i).y());
+				printf("robot[%i] = %f,%f\n",i, detection.robots_yellow(i).x(), detection.robots_yellow(i).y());
 				dataVision.yellowRobots.push_back(detection.robots_yellow(i));
 			}
 
@@ -191,13 +191,28 @@ void Tracker::receiveFromVision() {
 			//printf("robots_yellow_n = %i\n", dataVision.robots_yellow_n);
 		}
 		if(packet.has_geometry()){
-			SSL_GeometryFieldSize field = packet.geometry().field();
+			printf("TEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\nTEM GEOMETRIA\n");
+			//SSL_GeometryFieldSize field = packet.geometry().field();
+			const SSL_GeometryData & geom = packet.geometry();
+                printf("-[Geometry Data]-------\n");
+
+                const SSL_GeometryFieldSize & field = geom.field();
 			
 			dataVision.fieldLength = field.field_length();
 			dataVision.fieldWidth =  field.field_width();
 			
 			printf("fieldLength = %i\n", dataVision.fieldLength);
 			printf("fieldWidth = %i\n", dataVision.fieldWidth);
+			
+			scaleFactorLength = (float)LENGTH / dataVision.fieldLength;
+			scaleFactorWidth = (float) WIDTH / dataVision.fieldWidth;
+			
+			this->receivedMinInfo = true;
+		}
+		else
+		{//gambiarra pra ver na CBR2011
+			dataVision.fieldLength = 6050;
+			dataVision.fieldWidth =  4050;
 			
 			scaleFactorLength = (float)LENGTH / dataVision.fieldLength;
 			scaleFactorWidth = (float) WIDTH / dataVision.fieldWidth;
@@ -278,7 +293,8 @@ void Tracker::receiveFromSim()
 void Tracker::sendToAI() {
 
 	if(_blues.size()!=0 || _yellows.size()!=0) {
-		
+	//	if(true){
+			
 		RoboPET_WrapperPacket packet;
 
 		TrackerToAI *trackertoaiPacket = packet.mutable_trackertoai();
